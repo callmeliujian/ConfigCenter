@@ -13,7 +13,7 @@
 @interface ConfigAdaptor : NSObject
 
 //存放DJConfigDataModel对象的数组
-@property (nonatomic, strong) NSMutableArray *modelArr;
+@property (nonatomic, strong) NSMutableArray *modelArray;
 @property (nonatomic, strong) NSString *userGroup;
 @property (nonatomic, strong) NSString *version;
 @property (nonatomic, strong) ConfigVersionModel *versionModel;
@@ -32,5 +32,7 @@
 - (NSArray *)getArrayDataWithKey:(NSString *)key;
 
 - (NSString *)version;
+
+- (void)updateData:(NSDictionary *)dict;
 
 @end

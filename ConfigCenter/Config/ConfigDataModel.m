@@ -25,10 +25,7 @@
 
 - (void)assignWithDic:(NSDictionary *)params
 {
-    self.cityid = [NSString stringWithFormat:@"%@", params[@"cityid"]];
     self.key = [NSString stringWithFormat:@"%@", params[@"key"]];
-    
-    self.updatetime = [NSString stringWithFormat:@"%@", params[@"updatetime"]];
     self.model = [self createObjectWithClassName:self.className withParams:params[@"value"]];
     if (!self.model) {
         self.model = params[@"value"];

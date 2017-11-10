@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "LJConfigManager.h"
+#import "AFNetworking.h"
 
 @interface ViewController ()
 
@@ -16,13 +18,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    [manager GET:@"http://www.baidu.com" parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
+//        NSLog(@"JSON: %@", responseObject);
+//    } failure:^(NSURLSessionTask *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//    }];
+    
+    [[LJConfigManager shareInstance] createManager];
+    
+    
 }
 
 

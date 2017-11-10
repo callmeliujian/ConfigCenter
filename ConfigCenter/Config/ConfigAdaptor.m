@@ -16,19 +16,32 @@
 {
     self = [super init];
     if (self) {
-        self.modelArr = [[NSMutableArray alloc] init];
+        self.modelArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
+- (void)updateData:(NSDictionary *)dic {
+    if (![dic isKindOfClass:[NSDictionary class]]) return;
+    for (NSString *key in dic) {
+        if ([dic[key] isKindOfClass:[NSArray class]]) {
+            NSMutableDictionary *mutableDic = [NSMutableDictionary dictionary];
+            [mutableDic setValue:key forKey:@"key"];
+            [mutableDic setValue:dic[key] forKey:@"value"];
+            ConfigDataModel *dataModel = [self getDataModelWithKey:key];
+            [dataModel assignWithDic:mutableDic];
+        }
+    }
+}
+
 - (void)updateVersion:(NSDictionary *)data
 {
-    NSString *cityid = [NSString stringWithFormat:@"%@", data[@"cityid"]];
-    NSString *userGroup = [NSString stringWithFormat:@"%@", data[@"userGroup"]];
-    NSString *version = [NSString stringWithFormat:@"%@", data[@"currentVersion"]];
-    self.userGroup = userGroup;
-    self.version = version;
-    _versionModel = [[ConfigVersionModel alloc] initWithCity:cityid version:version userGroup:userGroup];
+//    NSString *cityid = [NSString stringWithFormat:@"%@", data[@"cityid"]];
+//    NSString *userGroup = [NSString stringWithFormat:@"%@", data[@"userGroup"]];
+//    NSString *version = [NSString stringWithFormat:@"%@", data[@"currentVersion"]];
+//    self.userGroup = userGroup;
+//    self.version = version;
+//    _versionModel = [[ConfigVersionModel alloc] initWithCity:cityid version:version userGroup:userGroup];
 }
 
 - (void)updateUserGroup:(NSString *)userGroup
@@ -60,7 +73,7 @@
         }
         else
         {
-            for (ConfigDataModel *model in self.modelArr) {
+            for (ConfigDataModel *model in self.modelArray) {
                 if ([model.key isEqualToString:key])
                 {
                     model.model = nil;
@@ -73,7 +86,7 @@
 -(void)registerModelWithKey:(NSString *)key modelClassName:(NSString *)className
 {
     // 查找看看是否已经构建对应的model
-    for (ConfigDataModel *model in self.modelArr) {
+    for (ConfigDataModel *model in self.modelArray) {
         if ([model.key isEqualToString:key])
         {
             model.className = className;
@@ -84,25 +97,25 @@
     ConfigDataModel *model = [[ConfigDataModel alloc] init];
     model.key = key;
     model.className = className;
-    [self.modelArr addObject:model];
+    [self.modelArray addObject:model];
 }
 
 - (ConfigDataModel *)getDataModelWithKey:(NSString *)key
 {
-    for (ConfigDataModel *model in self.modelArr) {
+    for (ConfigDataModel *model in self.modelArray) {
         if ([model.key isEqualToString:key])
             return model;
     }
     
     ConfigDataModel *model = [[ConfigDataModel alloc] init];
     model.key = key;
-    [self.modelArr addObject:model];
+    [self.modelArray addObject:model];
     return model;
 }
 
 - (id)getDataWithKey:(NSString *)key
 {
-    for (ConfigDataModel *model in self.modelArr) {
+    for (ConfigDataModel *model in self.modelArray) {
         if ([model.key isEqualToString:key])
         {
             return model.model;
