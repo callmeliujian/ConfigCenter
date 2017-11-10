@@ -34,55 +34,6 @@
     }
 }
 
-- (void)updateVersion:(NSDictionary *)data
-{
-//    NSString *cityid = [NSString stringWithFormat:@"%@", data[@"cityid"]];
-//    NSString *userGroup = [NSString stringWithFormat:@"%@", data[@"userGroup"]];
-//    NSString *version = [NSString stringWithFormat:@"%@", data[@"currentVersion"]];
-//    self.userGroup = userGroup;
-//    self.version = version;
-//    _versionModel = [[ConfigVersionModel alloc] initWithCity:cityid version:version userGroup:userGroup];
-}
-
-- (void)updateUserGroup:(NSString *)userGroup
-{
-    if ([ConfigVersionModel respondsToSelector:@selector(setUserGroupFunc:)]) {
-        //[ConfigVersionModel setUserGroupFunc:userGroup];
-    }
-}
-
-- (void)updateData:(NSDictionary *)dic withCityid:(NSString *)cityid
-{
-    if (![dic isKindOfClass:[NSDictionary class]]) {
-        return;
-    }
-    for (NSString *key in dic.allKeys) {
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setValue:cityid forKey:@"cityid"];
-        [params setValue:key forKey:@"key"];
-        [params setValue:dic[key] forKey:@"value"];
-        if (!([dic[key] isKindOfClass:[NSString class]] && [dic[key] length] == 0)) {
-            NSDate *dateToDay = [NSDate date];
-            NSDateFormatter *df = [[NSDateFormatter alloc] init];
-            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-            NSString *str = [df stringFromDate:dateToDay];
-            
-            [params setValue:str forKey:@"updatetime"];
-            ConfigDataModel *dataModel = [self getDataModelWithKey:key];
-            [dataModel assignWithDic:params];
-        }
-        else
-        {
-            for (ConfigDataModel *model in self.modelArray) {
-                if ([model.key isEqualToString:key])
-                {
-                    model.model = nil;
-                }
-            }
-        }
-    }
-}
-
 -(void)registerModelWithKey:(NSString *)key modelClassName:(NSString *)className
 {
     // 查找看看是否已经构建对应的model
@@ -132,15 +83,5 @@
     }
     return nil;
 }
-
-#pragma mark - get&set method
-- (NSString *)version
-{
-    if (_version == nil) {
-        return @"1";
-    }
-    return _version;
-}
-
 
 @end

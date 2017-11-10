@@ -18,11 +18,7 @@
 @property (nonatomic, strong) NSString *version;
 @property (nonatomic, strong) ConfigVersionModel *versionModel;
 
-- (void)updateData:(NSDictionary *)dic withCityid:(NSString *)cityid;
-
 - (void)updateVersion:(NSDictionary *)data;
-
-- (void)updateUserGroup:(NSString *)userGroup;
 
 -(void)registerModelWithKey:(NSString *)key modelClassName:(NSString *)className;
 

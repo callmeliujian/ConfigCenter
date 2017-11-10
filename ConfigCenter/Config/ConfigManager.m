@@ -56,7 +56,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void)setupParams:(NSDictionary *)params {
     self.params = [[NSDictionary alloc] initWithDictionary:params];
-    
     self.delegates = [[NSMutableArray alloc] init];
     [self creatAdaptor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -115,7 +114,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self deserializeToMemory:responseDic];
             [self storageAllDataToDB:responseDic[@"data"]];
         }
-        
     } else {
         //请求失败
         NSLog(@"配置中心网络请求失败“%@",[[responseDic valueForKey:@"codeMsg"] stringValue]);
@@ -135,7 +133,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  增量更新时候使用
  数据存储到数据库
  
- @param dic
  */
 - (void)storageDataToDB:(NSDictionary *)dic {
     [[ConfigDB shareDB] hanldDataToDB:dic];
@@ -145,7 +142,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  全量更新时候使用
  所有数据存储到数据库
  
- @param dic 
  */
 - (void)storageAllDataToDB:(NSDictionary *)dic {
     [[ConfigDB shareDB] updateDataToDB:dic];
