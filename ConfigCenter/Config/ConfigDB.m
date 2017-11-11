@@ -34,7 +34,7 @@
     return [self.configDB close];
 }
 
-- (void)hanldDataToDB:(NSDictionary *)dic {
+- (void)hanldDataToDB:(NSDictionary *)dic withModelKeyName:(NSArray *)modelKeyName {
     if (![dic isKindOfClass:[NSDictionary class]]) return;
     [[ConfigDB shareDB] openDB];
     for (NSString *key in dic) {
@@ -47,8 +47,21 @@
                         [self deletDataFromDB:valueDict withTableName:key];
                     }
                 }
+        } else if ([dic[key] isKindOfClass:[NSNumber class]]) { //创建元数据表
+            if ([self createMetaDataTable]) {
+                [self insertMetadata:dic];
+            }
+            
         }
     }
+    
+    if (modelKeyName == nil || modelKeyName.count == 0) return;
+    
+    NSDictionary *modelDic = [self dataFromDBToDic:modelKeyName];
+    if ([self.delegate respondsToSelector:@selector(dataFromDBToMemory:)]) {
+        [self.delegate dataFromDBToMemory:modelDic];
+    }
+    
     [[ConfigDB shareDB] closeDB];
 }
 
@@ -88,10 +101,33 @@
 
  @return 创建表是否成功
  */
-- (BOOL)createTable {
-    NSString *sql = @"create table IF NOT EXISTS config_other (id integer primary key autoincrement, currentVersion text, cityId text);";
+- (BOOL)createMetaDataTable {
+    NSString *sql = @"create table IF NOT EXISTS config_metadata (id integer primary key autoincrement, currentVersion text, cityId text);";
     BOOL success = [self.configDB executeStatements:sql];
+    if (!success) NSLog(@"配置中心创建config_metadata表失败");
     return success;
+}
+
+- (void)insertMetadata:(NSDictionary *)dic {
+    if (![dic isKindOfClass:[NSDictionary class]]) return;
+    
+    NSString *key = [dic objectForKey:@"key"];
+    NSString *value = [dic objectForKey:@"value"];
+    
+    if (key == nil || value == nil || [key isEqualToString:@""] || [value isEqualToString:@""]) return;
+    
+    NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",@"config_metadata",key];
+    FMResultSet *result = [self.configDB executeQuery:sql];
+    if ([result next]) {
+        NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",@"config_metadata",value,key];
+        BOOL success = [self.configDB executeUpdate:updataSql];
+        if (!success) NSLog(@"配置中心config_metadata表修改数据失败");
+    } else {
+        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",@"config_metadata"];
+        BOOL success = [self.configDB executeUpdate:insertSql, key, value];
+        if (!success) NSLog(@"配置中心config_metadata表插入数据失败");
+    }
+    
 }
 
 /**
@@ -156,6 +192,47 @@
         return [result stringForColumn:@"value"];
     }
     return @"";
+}
+
+/**
+ 把数据库的数据转化为数组字典
+ 
+ @param modelNameArray 模块名即表名
+ @return 数组字典
+ */
+- (NSDictionary *)dataFromDBToDic:(NSArray *)modelNameArray {
+    if (modelNameArray == nil || modelNameArray.count == 0) return nil;
+    NSMutableDictionary *mutableDic = [NSMutableDictionary dictionary];
+    for (NSString *key in modelNameArray) {
+        NSArray *array = [self dataFromDBToArray:key];
+        if (!array) break;
+        [mutableDic setObject:array forKey:key];
+    }
+    return mutableDic;
+}
+
+/**
+ 将表里的元素装换为数组
+ 
+ @param modelName 表名
+ @return 表数组
+ */
+- (NSArray *)dataFromDBToArray:(NSString *)modelName {
+    if (modelName == nil || [modelName isEqualToString:@""]) return nil;
+    [self.configDB open];
+    NSString *sql = [NSString stringWithFormat:@"select * from %@",modelName];
+    FMResultSet *result = [self.configDB executeQuery:sql];
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    while ([result next]) {
+        NSString *key = [result stringForColumn:@"key"];
+        NSString *value = [result stringForColumn:@"value"];
+        if (key != nil && value != nil && ![key isEqualToString:@""] && ![value isEqualToString:@""] ) {
+            NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:value, key, nil];
+            [mutableArray addObject:dic];
+        }
+    }
+    [self.configDB close];
+    return mutableArray;
 }
 
 #pragma mark - Lazy

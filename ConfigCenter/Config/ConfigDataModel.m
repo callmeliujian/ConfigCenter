@@ -77,14 +77,16 @@
         }
         else if ([param isKindOfClass:[NSArray class]])
         {
-            model = [[NSMutableArray alloc] init];
-            for (id dic in param) {
-                if ([dic isKindOfClass:[NSDictionary class]]) {
-                    id obj  = [[targetClass alloc] init];
-                    id target = [self exeMethodWithtarget:obj withParam:dic];
-                    [model addObject:target];
-                }
-            }
+//            model = [[NSMutableArray alloc] init];
+//            for (id dic in param) {
+//                if ([dic isKindOfClass:[NSDictionary class]]) {
+//                    id obj  = [[targetClass alloc] init];
+//                    id target = [self exeMethodWithtarget:obj withParam:dic];
+//                    [model addObject:target];
+//                }
+//            }
+            id obj = [[targetClass alloc] init];
+            [self exeMethodWithtarget:obj withParam:param];
         }
         else
         {
@@ -94,7 +96,7 @@
     return model;
 }
 
-- (id)exeMethodWithtarget:(id)target withParam:(NSDictionary *)param
+- (id)exeMethodWithtarget:(id)target withParam:(NSArray *)param
 {
     if([[ConfigDataModel class] respondsToSelector:@selector(customGenerateModel:parameters:)]){
         target = [ConfigDataModel customGenerateModel:target parameters:param];
@@ -107,11 +109,11 @@
         return target;
     }
     
-    action = NSSelectorFromString(@"initWithDictionary:error:");
-    if(action && [target respondsToSelector:action])
-    {
-        [target performSelector:action withObject:param withObject:nil];
-    }
+//    action = NSSelectorFromString(@"initWithDictionary:error:");
+//    if(action && [target respondsToSelector:action])
+//    {
+//        [target performSelector:action withObject:param withObject:nil];
+//    }
     return target;
 }
 

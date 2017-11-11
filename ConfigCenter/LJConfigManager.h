@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "ConfigManager.h"
 
+
+
 @interface LJConfigManager : NSObject <ConfigManagerDelegate>
+
+@property (nonatomic, strong) NSArray *keyArray;
 
 + (instancetype)shareInstance;
 - (void)createManager;

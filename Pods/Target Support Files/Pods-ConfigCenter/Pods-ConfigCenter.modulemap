@@ -1,0 +1,6 @@
+framework module Pods_ConfigCenter {
+  umbrella header "Pods-ConfigCenter-umbrella.h"
+
+  export *
+  module * { export * }
+}

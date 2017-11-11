@@ -19,7 +19,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     ACTION_APPEND //增量更新
 };
 
-@interface ConfigManager () <NSURLSessionDelegate, NSURLSessionTaskDelegate>
+@interface ConfigManager () <NSURLSessionDelegate, NSURLSessionTaskDelegate, ConfigDBDelegate>
 /**
  存储获得到的网络数据
  */
@@ -38,6 +38,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  将配置中心解析数据所有需要的model类的名字存在此数组中
  */
 @property (nonatomic, strong) NSMutableArray *classNameArray;
+/**
+ model类名对应的key
+ */
+@property (nonatomic, strong) NSArray *modelKeyNameArray;
 
 
 
@@ -50,12 +54,14 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     static dispatch_once_t DJCONFIGMANAGER;
     dispatch_once(&DJCONFIGMANAGER, ^{
         manager = [[ConfigManager alloc] init];
+        [ConfigDB shareDB].delegate = manager;
     });
     return manager;
 }
 
 - (void)setupParams:(NSDictionary *)params {
-    self.params = [[NSDictionary alloc] initWithDictionary:params];
+    self.params = params;
+    //self.params = [[NSDictionary alloc] initWithDictionary:params];
     self.delegates = [[NSMutableArray alloc] init];
     [self creatAdaptor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -111,11 +117,11 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self storageDataToDB:responseDic[@"data"]];
         } else if (actionInt == ACTION_FULL) { //全量更新
             // 操作数据库并将配置中心数据反序列化到内存
+            [self deleteOldDB];
             [self deserializeToMemory:responseDic];
             [self storageAllDataToDB:responseDic[@"data"]];
         }
-    } else {
-        //请求失败
+    } else { //请求失败
         NSLog(@"配置中心网络请求失败“%@",[[responseDic valueForKey:@"codeMsg"] stringValue]);
     }
     
@@ -135,7 +141,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  
  */
 - (void)storageDataToDB:(NSDictionary *)dic {
-    [[ConfigDB shareDB] hanldDataToDB:dic];
+    [[ConfigDB shareDB] hanldDataToDB:dic withModelKeyName:self.params[@"modelkeyname"]];
 }
 
 /**
@@ -145,6 +151,13 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  */
 - (void)storageAllDataToDB:(NSDictionary *)dic {
     [[ConfigDB shareDB] updateDataToDB:dic];
+}
+
+/**
+ 删除老版本数据库
+ */
+- (void)deleteOldDB {
+    
 }
 
 -(void)registerWithKey:(NSString *)key modelClassName:(NSString *)className {
@@ -174,6 +187,12 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     [self.allData appendData:data];
+}
+
+#pragma mark - ConfigDBDelegate
+
+- (void) dataFromDBToMemory:(NSDictionary *)dic {
+    [self deserializeToMemory:dic];
 }
 
 #pragma mark - Lazy
