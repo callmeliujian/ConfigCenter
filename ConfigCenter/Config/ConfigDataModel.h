@@ -24,9 +24,8 @@
  version    bigint    该模块的最后版本号
  updatetime    datetime    数据最后更新时间*/
 
-@property (nonatomic, strong) NSString *cityid;
+//@property (nonatomic, strong) NSString *cityid;
 @property (nonatomic, strong) NSString *key;
-//@property (nonatomic, strong) NSString *value; //{key:value}
 @property (nonatomic, strong) NSString *updatetime;
 @property (nonatomic, strong) NSString *className;
 @property (nonatomic, strong) id model;

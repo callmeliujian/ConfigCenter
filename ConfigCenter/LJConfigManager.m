@@ -9,6 +9,7 @@
 #import "LJConfigManager.h"
 #import "ConfigDelegate.h"
 #import "ConfigManager.h"
+#import "ConfigUtils.h"
 
 @interface LJConfigManager ()
 
@@ -31,8 +32,21 @@
 - (void)createManager {
     // 注册key关联的model类名称
     [self ConfigRegister];
+    NSString *currentTime = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970] * 1000];
+    NSString *res = [NSString stringWithFormat:@"\"encryptid=\"+%@+\"secretKey=\"+%@+\"time\"+%@",@"1001", @"wubashenqi", currentTime];
+    NSString *res_sha1 = [ConfigUtils SHA1:res];
     NSMutableDictionary *configParam = [[NSMutableDictionary alloc] init];
     [configParam setObject:self.keyArray forKey:@"modelkeyname"];
+    [configParam setObject:@"10.37.18.173:8030" forKey:@"URL"];
+    [configParam setObject:@"" forKey:@"DB"];
+    [configParam setObject:@"suyun_test" forKey:@"app"];
+    [configParam setObject:@"pt" forKey:@"platform"];
+    [configParam setObject:@"1" forKey:@"appversion"];
+    [configParam setObject:@"-1" forKey:@"cityid"];
+    [configParam setObject:@"-1" forKey:@"version"];
+    [configParam setObject:@"1001" forKey:@"encryptid"];
+    [configParam setObject:currentTime forKey:@"time"];
+    [configParam setObject:res_sha1 forKey:@"res"];
     [[ConfigManager shareInstance] setupParams:configParam];
     [[ConfigManager shareInstance] addDelegate:self];
 }

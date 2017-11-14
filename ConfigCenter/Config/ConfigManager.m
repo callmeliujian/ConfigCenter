@@ -61,7 +61,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void)setupParams:(NSDictionary *)params {
     self.params = params;
-    //self.params = [[NSDictionary alloc] initWithDictionary:params];
     self.delegates = [[NSMutableArray alloc] init];
     [self creatAdaptor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -79,8 +78,9 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 - (void)getConfigDataFromNetWork {
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
-    
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://mockhttp.cn/mock/suyun/123"]]];
+    NSString *stringURL = [NSString stringWithFormat:@"http://%@/getall?app=%@&platform=%@&appversion=%@&cityid=%@&version=%@&encryptid=%@&time=%@&res=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
+    NSString *test = @"http://mockhttp.cn/mock/suyun/123";
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:stringURL]]];
     
     [task resume];
 
@@ -121,8 +121,9 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self deserializeToMemory:responseDic];
             [self storageAllDataToDB:responseDic[@"data"]];
         }
-    } else { //请求失败
+    } else { //请求失败, 加载本地数据
         NSLog(@"配置中心网络请求失败“%@",[[responseDic valueForKey:@"codeMsg"] stringValue]);
+        [[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
     }
     
 }
@@ -131,7 +132,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  将配置中心数据反序列化到内存
  */
 - (void)deserializeToMemory:(NSDictionary *)dic {
-    //[self.adaptor updateVersion:data];
     [self.adaptor updateData:dic[@"data"]];
 }
 
@@ -181,6 +181,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         [self analyticalData];
     } else {
         self.allData = nil;
+        [[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
         NSLog(@"配置中心网络访问失败：%@",error);
     }
 }
@@ -224,175 +225,4 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 @end
-
-////反序列化数据
-//- (void)deserialize:(NSDictionary *)data
-//{
-//    [self.adaptor updateVersion:data];
-//    [self.adaptor updateData:data[@"incrConfig"] withCityid:data[@"cityid"]];
-//    [self.adaptor updateUserGroup:[NSString stringWithFormat:@"%@", data[@"userGroup"]]];
-//}
-//
-////更新数据存储到DB中
-//- (void)updataConfigStoreDB:(NSDictionary *)data
-//{
-//    [[DJConfigDB shareDB] updateVersionConfig:data];
-//    
-//    [[DJConfigDB shareDB] updateDataConfig:data];
-//}
-//
-//- (void)getVersionConfigFromDB:(NSString *)cityid
-//{
-//    self.versionConfig = [[DJConfigDB shareDB] getVersionNumberListData:cityid];
-//}
-//
-//- (NSString *)getUserGroupFromAdaptor
-//{
-//    return self.adaptor.userGroup;
-//}
-//
-//- (void)setAdaptorVersion:(NSString *)version
-//{
-//    self.adaptor.version = version;
-//}
-//
-//- (void)noticeFullUpdate:(NSDictionary *)dic
-//{
-//    for (id<DJConfigDelegate> delegate in self.delegates) {
-//        if ([delegate respondsToSelector:@selector(allKeysChange:)]) {
-//            [delegate allKeysChange:dic];
-//        }
-//    }
-//}
-//
-//- (void)noticePartUpdate:(NSDictionary *)dic
-//{
-//    for (id<DJConfigDelegate> delegate in self.delegates) {
-//        if ([delegate respondsToSelector:@selector(partKeysChange:)]) {
-//            [delegate partKeysChange:dic];
-//        }
-//    }
-//}
-//
-//- (void)noticeCityIdChange
-//{
-//    for (id<DJConfigDelegate> delegate in self.delegates) {
-//        if ([delegate respondsToSelector:@selector(cityIdChange)]) {
-//            [delegate cityIdChange];
-//        }
-//    }
-//}
-//
-//- (void)noticeConfigDataChange
-//{
-//    for (id<DJConfigDelegate> delegate in self.delegates) {
-//        if ([delegate respondsToSelector:@selector(configDataChange)]) {
-//            [delegate configDataChange];
-//        }
-//    }
-//}
-//
-//- (void)noticeConfigNoChange
-//{
-//    for (id<DJConfigDelegate> delegate in self.delegates) {
-//        if ([delegate respondsToSelector:@selector(congfigNoChange)]) {
-//            [delegate congfigNoChange];
-//        }
-//    }
-//}
-//
-//- (NSDictionary *)deserializeVersion:(NSString *)cityid withVersion:(NSString *)version withUserGroup:(NSString *)userGroup
-//{
-//    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-//    [dic setValue:cityid forKey:@"cityid"];
-//    [dic setValue:version forKey:@"version"];
-//    [dic setValue:userGroup forKey:@"userGroup"];
-//    return dic;
-//}
-//
-////主动更新
-//- (NSDictionary *)getAllConfig
-//{
-//    return self.allConfig;
-//}
-//
-////获取版本号，userGroup
-//- (NSDictionary *)getVersionConfig
-//{
-//    return self.versionConfig;
-//}
-//
-
-//
-//- (NSMutableArray *)ClassNameArr
-//{
-//    if (_ClassNameArr == nil) {
-//        _ClassNameArr = [[NSMutableArray alloc] init];
-//    }
-//    return _ClassNameArr;
-//}
-//
-//- (id)getDataWithKey:(NSString *)key
-//{
-//    return [self.adaptor getDataWithKey:key];
-//}
-//
-//- (id)getArrayDataWithKey:(NSString *)key
-//{
-//    return [self.adaptor getArrayDataWithKey:key];
-//}
-//
-//- (void)cityChanged:(NSString *)cityid
-//{
-//    if ([cityid isEqualToString:self.cityid])
-//        return;
-//    
-//    self.cityid = cityid;
-//    [self createAdaptor];
-//    
-//    [self noticeCityIdChange];
-//    
-//    // 从网络加载最新配置数据
-//    [self getConfigDataFromNetWork];
-//}
-//
-//- (DJConfigAdaptor *)adaptor
-//{
-//    if (!_adaptor)
-//        [self createAdaptor];
-//    return _adaptor;
-//}
-//
-//- (void)createAdaptor
-//{
-//    if(!self.cityid)
-//        return;
-//    
-//    _adaptor = [[DJConfigAdaptor alloc] init];
-//    
-//    //从数据库获取model并存放到modelArr
-//    [[DJConfigDB shareDB] getConfigDataListData:(NSString *)self.cityid];
-//    
-//    [self registerClassName];
-//    
-//    [self getVersionConfigFromDB:self.cityid];
-//    if (self.versionConfig.count != 0) {
-//        [_adaptor updateVersion:self.versionConfig];
-//    }
-//}
-//
-
-//
-//- (NSString *)getDynamicUrlWithURLKey:(NSString *)key
-//{
-//    NSString *url;
-//    id model = [self getDataWithKey:@"dynamic_url"];
-//    if ([model isKindOfClass:[NSArray class]]) {
-//        id dic = [model lastObject];
-//        if ([dic isKindOfClass:[NSDictionary class]]) {
-//            url = dic[key];
-//        }
-//    }
-//    return url;
-//}
 

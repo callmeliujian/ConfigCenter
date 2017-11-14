@@ -10,4 +10,6 @@
 
 @interface ConfigUtils : NSObject
 
++ (NSString *)SHA1:(NSString *)inputString;
+
 @end

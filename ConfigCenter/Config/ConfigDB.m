@@ -208,7 +208,8 @@
         if (!array) break;
         [mutableDic setObject:array forKey:key];
     }
-    return mutableDic;
+    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:mutableDic, @"data", nil];
+    return dic;
 }
 
 /**
