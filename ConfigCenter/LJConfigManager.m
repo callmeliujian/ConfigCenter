@@ -32,14 +32,15 @@
 - (void)createManager {
     // 注册key关联的model类名称
     [self ConfigRegister];
-    NSString *currentTime = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970] * 1000];
-    NSString *res = [NSString stringWithFormat:@"\"encryptid=\"+%@+\"secretKey=\"+%@+\"time\"+%@",@"1001", @"wubashenqi", currentTime];
+    long long recordTime = [[NSDate date] timeIntervalSince1970]*1000;
+    NSString *currentTime = [NSString stringWithFormat:@"%lld", recordTime];
+    NSString *res = [NSString stringWithFormat:@"encryptid=%@secretKey=%@time=%@",@"1001", @"wubashenqi", currentTime];
     NSString *res_sha1 = [ConfigUtils SHA1:res];
     NSMutableDictionary *configParam = [[NSMutableDictionary alloc] init];
     [configParam setObject:self.keyArray forKey:@"modelkeyname"];
     [configParam setObject:@"10.37.18.173:8030" forKey:@"URL"];
     [configParam setObject:@"" forKey:@"DB"];
-    [configParam setObject:@"suyun_test" forKey:@"app"];
+    [configParam setObject:@"suyun" forKey:@"app"];
     [configParam setObject:@"pt" forKey:@"platform"];
     [configParam setObject:@"1" forKey:@"appversion"];
     [configParam setObject:@"-1" forKey:@"cityid"];

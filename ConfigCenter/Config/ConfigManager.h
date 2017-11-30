@@ -57,14 +57,12 @@
 - (id)getDataWithKey:(NSString *)key;
 - (id)getArrayDataWithKey:(NSString *)key;
 
-//城市变化
+/**
+ 城市变化
+ 城市发生变化的时候将config_metadata表以外的其他表都删除
+
+ @param cityid 城市ID
+ */
 - (void)cityChanged:(NSString *)cityid;
-
-
-//获取动态url
-- (NSString *)getDynamicUrlWithURLKey:(NSString *)key;
-
-//debug模式，设置版本号为1
-- (void)debug_setCityVersion;
 
 @end

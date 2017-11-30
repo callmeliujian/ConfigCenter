@@ -5,6 +5,7 @@
 //  Created by 刘健 on 09/11/2017.
 //  Copyright © 2017 刘健. All rights reserved.
 //
+// metadataDic 除了moudles里的数据都是metadata数据
 
 #import "ConfigDB.h"
 #import "FMDatabase.h"
@@ -12,6 +13,11 @@
 @interface ConfigDB ()
 
 @property (nonatomic, strong) FMDatabase *configDB;
+
+/**
+ 存放model的key
+ */
+//@property (nonatomic, strong) NSMutableArray *modelKeyNameArray;
 
 @end
 
@@ -34,111 +40,56 @@
     return [self.configDB close];
 }
 
-- (void)hanldDataToDB:(NSDictionary *)dic withModelKeyName:(NSArray *)modelKeyName {
+- (void)hanldDataToDB:(NSDictionary *)dic {
     if (![dic isKindOfClass:[NSDictionary class]]) return;
-    [[ConfigDB shareDB] openDB];
-    for (NSString *key in dic) {
-        if ([dic[key] isKindOfClass:[NSArray class]]) {
-                for (NSDictionary *valueDict in dic[key]) {
-                    NSNumber *status = [valueDict objectForKey:@"status"];
-                    if ([status intValue] == 1) { // status == 1 为增加或修改数据
-                        [self insertDataToDB:valueDict withTableName:key];
-                    } else if ([status intValue] == -1) { // status == -1 删除数据
-                        [self deletDataFromDB:valueDict withTableName:key];
-                    }
-                }
-        } else if ([dic[key] isKindOfClass:[NSNumber class]]) { //创建元数据表
-            if ([self createMetaDataTable]) {
-                [self insertMetadata:dic];
-            }
-            
-        }
-    }
+    // 1.将metadata放入metadataDic中
+    NSMutableDictionary *metadataDic = [NSMutableDictionary dictionary];
+    NSString *action = [[dic objectForKey:@"action"] stringValue];
+    [metadataDic setObject:action forKey:@"action"];
+    NSString *currentVersion = [[dic objectForKey:@"currentVersion"] stringValue];
+    [metadataDic setObject:currentVersion forKey:@"currentVersion"];
+    NSString *ciytId = [dic objectForKey:@"cityId"];
+    [metadataDic setObject:ciytId forKey:@"ciytId"];
+    // 2.处理modules的数据
+    [self hanldModules:[dic objectForKey:@"modules"]];
     
-    if (modelKeyName == nil || modelKeyName.count == 0) return;
-    
-    NSDictionary *modelDic = [self dataFromDBToDic:modelKeyName];
-    if ([self.delegate respondsToSelector:@selector(dataFromDBToMemory:)]) {
-        [self.delegate dataFromDBToMemory:modelDic];
-    }
-    
-    [[ConfigDB shareDB] closeDB];
+    // 3.创建config_metadata表 将metadataDic存入config_metadata表
+    [self createTable:@"config_metadata"];
+    [self insertMetadata:metadataDic withTableName:@"config_metadata"];
 }
-
-- (void)updateDataToDB:(NSDictionary *)dic {
-    if (![dic isKindOfClass:[NSDictionary class]]) return;
-    [[ConfigDB shareDB] openDB];
-//    NSString *currentVersion = [dic[@"currentVersion"] stringValue];
-//    NSString *cityID = [dic[@"cityId"] stringValue];
-    for (NSString *key in dic) {
-        if ([dic[key] isKindOfClass:[NSArray class]]) {
-            if ([self createTable:key]) {
-                for (NSDictionary *valueDict in dic[key]) {
-                    [self insertDataToDB:valueDict withTableName:key];
-                }
-            } else {
-                NSLog(@"配置中心创建表失败");
-                [[ConfigDB shareDB] closeDB];
-                return;
-            }
-        }
-    }
-    [[ConfigDB shareDB] closeDB];
-}
-
-#pragma mark - 数据库相关操作
-
-- (BOOL)createTable:(NSString *)tableName {
-    if (tableName == nil || [tableName isEqualToString:@""]) return NO;
-    NSString *sql = [NSString stringWithFormat:@"create table IF NOT EXISTS %@ (id integer primary key autoincrement, key text, value text);", tableName];
-    BOOL success = [self.configDB executeStatements:sql];
-    return success;
-}
-
 
 /**
- 把配置中心的版本号、城市ID单独放在此表中
-
- @return 创建表是否成功
+ 处理Modules数组
  */
-- (BOOL)createMetaDataTable {
-    NSString *sql = @"create table IF NOT EXISTS config_metadata (id integer primary key autoincrement, currentVersion text, cityId text);";
-    BOOL success = [self.configDB executeStatements:sql];
-    if (!success) NSLog(@"配置中心创建config_metadata表失败");
-    return success;
-}
-
-- (void)insertMetadata:(NSDictionary *)dic {
-    if (![dic isKindOfClass:[NSDictionary class]]) return;
-    
-    NSString *key = [dic objectForKey:@"key"];
-    NSString *value = [dic objectForKey:@"value"];
-    
-    if (key == nil || value == nil || [key isEqualToString:@""] || [value isEqualToString:@""]) return;
-    
-    NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",@"config_metadata",key];
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    if ([result next]) {
-        NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",@"config_metadata",value,key];
-        BOOL success = [self.configDB executeUpdate:updataSql];
-        if (!success) NSLog(@"配置中心config_metadata表修改数据失败");
-    } else {
-        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",@"config_metadata"];
-        BOOL success = [self.configDB executeUpdate:insertSql, key, value];
-        if (!success) NSLog(@"配置中心config_metadata表插入数据失败");
+- (void)hanldModules:(NSArray *)modulesArray {
+    if (![modulesArray isKindOfClass:[NSArray class]]) return;
+    for (NSDictionary *moduleDic in modulesArray) {
+        NSString *moduleName;
+        for (NSString *key in moduleDic) {
+            id object = [moduleDic valueForKey:key];
+            if ([object isKindOfClass:[NSString class]]) { // moduleName 加上前缀config_即为表名
+                moduleName = [@"config_" stringByAppendingString:object];
+            } else if ([object isKindOfClass:[NSArray class]]) { // 处理moduleData
+                //[self handleModuleData:object withModuleName:moduleName];
+                // 1.创建表
+                [self createTable:moduleName];
+                // 2.写入数据
+                for (NSDictionary *dic in object) {
+                    [self handleDataToDB:dic withTableName:moduleName];
+                }
+                
+            }
+        }
     }
-    
 }
 
 /**
- {
- "key": "dsad",
- "status": 1,
- "value": "dsadnn333"
- },
+ 解析数据是增加或修改或删除
  
+ @param dic 待处理字典
+ @param tableName 表名
  */
-- (void)insertDataToDB:(NSDictionary *)dic withTableName:(NSString *)tableName {
+- (void)handleDataToDB:(NSDictionary *)dic withTableName:(NSString *)tableName {
     if (![dic isKindOfClass:[NSDictionary class]] || tableName == nil || [tableName isEqualToString:@""]) return;
     
     NSString *key = [dic objectForKey:@"key"];
@@ -146,26 +97,81 @@
     NSString *value = [dic objectForKey:@"value"];
     
     if (key == nil || status == nil || value == nil) return;
-    // status = 1 代表增加或修改
-    if ([status intValue] == 1) {
-        NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
-        FMResultSet *result = [self.configDB executeQuery:sql];
-        if ([result next]) {
-            NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",tableName,value,key];
-            BOOL success = [self.configDB executeUpdate:updataSql];
-            if (!success) NSLog(@"配置中心修改数据失败");
-        } else {
-            NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",tableName];
-            BOOL success = [self.configDB executeUpdate:insertSql, key, value];
-            if (!success) NSLog(@"配置中心插入数据失败");
-        }
+    
+    if ([status intValue] == 1) { // status = 1 代表增加或修改
+        [self insertDataToDBWithKey:key withValue:value withTableName:tableName];
+    } else if ([status intValue] == -1) { // status = -1 删除
+        [self deletDataFromDB:dic withTableName:tableName];
     }
-    return;
+}
+
+/**
+ 将Metadata插入数据库
+ 
+ @param dic Metadata
+ @param tableName 表名
+ */
+- (void)insertMetadata:(NSDictionary *)dic withTableName:(NSString *)tableName  {
+    if (![dic isKindOfClass:[NSDictionary class]] || tableName == nil || [tableName isEqualToString:@""]) return;
+    
+    for (NSString *key in dic) {
+        id object = [dic valueForKey:key];
+        if (![object isKindOfClass:[NSString class]]) {
+            object = [object stringValue];
+        }
+        if (key == nil || object == nil || [key isEqualToString:@""] || [object isEqualToString:@""]) break;
+        [self insertDataToDBWithKey:key withValue:object withTableName:tableName];
+    }
+}
+
+- (void)deleteTable:(NSString *)tableName {
+    [[ConfigDB shareDB] openDB];
+    if (tableName == nil) {
+        
+    } else {
+        
+    }
+    [[ConfigDB shareDB] closeDB];
+}
+
+#pragma mark - 数据库相关操作
+
+/**
+ 创建表
+
+ @param tableName 表名
+ @return 返回是否创建成功
+ */
+- (BOOL)createTable:(NSString *)tableName {
+    if (tableName == nil || [tableName isEqualToString:@""]) return NO;
+    NSString *sql = [NSString stringWithFormat:@"create table IF NOT EXISTS %@ (id integer primary key autoincrement, key text, value text);", tableName];
+    [[ConfigDB shareDB] openDB];
+    BOOL success = [self.configDB executeStatements:sql];
+    [[ConfigDB shareDB] closeDB];
+    return success;
+}
+
+- (void)insertDataToDBWithKey:(NSString *)key withValue:(NSString *)value withTableName:(NSString *)tableName {
+    if (![key isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]] || ![tableName isKindOfClass:[NSString class]]
+        || [key isEqualToString:@""] || [value isEqualToString:@""] || [tableName isEqualToString:@""]) return;
+    
+    [[ConfigDB shareDB] openDB];
+    NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
+    FMResultSet *result = [self.configDB executeQuery:sql];
+    if ([result next]) {
+        NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",tableName,value,key];
+        BOOL success = [self.configDB executeUpdate:updataSql];
+        if (!success) NSLog(@"配置中心修改数据失败");
+    } else {
+        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",tableName];
+        BOOL success = [self.configDB executeUpdate:insertSql, key, value];
+        if (!success) NSLog(@"配置中心插入数据失败");
+    }
+    [[ConfigDB shareDB] closeDB];
 }
 
 /**
  从数据库中删除数据
-
  */
 - (void)deletDataFromDB:(NSDictionary *)dic withTableName:(NSString *)tableName {
     if (![dic isKindOfClass:[NSDictionary class]] || tableName == nil || [tableName isEqualToString:@""]) return;
@@ -173,6 +179,7 @@
     NSString *key = [dic objectForKey:@"key"];
     NSNumber *status = [dic objectForKey:@"status"];
     NSString *value = [dic objectForKey:@"value"];
+
     
     if (key == nil || status == nil || value == nil) return;
     // status = -1 删除

@@ -78,8 +78,11 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 - (void)getConfigDataFromNetWork {
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
-    NSString *stringURL = [NSString stringWithFormat:@"http://%@/getall?app=%@&platform=%@&appversion=%@&cityid=%@&version=%@&encryptid=%@&time=%@&res=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
+    NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getall?app=%@&platform=%@&appversion=%@&cityid=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
     NSString *test = @"http://mockhttp.cn/mock/suyun/123";
+    NSLog(@"-------------ConfigCenter发送的请求地址为-----------------");
+    NSLog(@"%@",stringURL);
+    NSLog(@"-------------------------------------------------------");
     NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:stringURL]]];
     
     [task resume];
@@ -105,13 +108,12 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     
     if ([[responseDic valueForKey:@"code"] integerValue] == 0) {
         //请求成功
-        CONFIG_ACTION actionInt = [responseDic[@"data"][@"action"] intValue];
-        NSString *cityID = [responseDic[@"data"][@"cityId"] stringValue];
-        NSString *currentVersion = [responseDic[@"data"][@"currentVersion"] stringValue];
+        CONFIG_ACTION actionInt = [responseDic[@"action"] intValue];
         
         if (actionInt == ACTION_NOCHANGE) { // 没有更新
             // 将配置中心数据反序列化到内存
             [self deserializeToMemory:responseDic];
+            [self storageDataToDB:responseDic[@"data"]];
         } else if (actionInt == ACTION_APPEND) { //增量更新
             // 操作数据库并将配置中心数据反序列化到内存
             [self storageDataToDB:responseDic[@"data"]];
@@ -122,8 +124,8 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self storageAllDataToDB:responseDic[@"data"]];
         }
     } else { //请求失败, 加载本地数据
-        NSLog(@"配置中心网络请求失败“%@",[[responseDic valueForKey:@"codeMsg"] stringValue]);
-        [[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
+        NSLog(@"配置中心网络请求失败:%@",[responseDic valueForKey:@"codeMsg"]);
+        //[[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
     }
     
 }
@@ -141,7 +143,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  
  */
 - (void)storageDataToDB:(NSDictionary *)dic {
-    [[ConfigDB shareDB] hanldDataToDB:dic withModelKeyName:self.params[@"modelkeyname"]];
+    [[ConfigDB shareDB] hanldDataToDB:dic];
 }
 
 /**
@@ -154,10 +156,31 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 /**
+ 将元数据写入数据库
+ 元数据：城市ID、配置中心版本号等
+ */
+- (void)writeMetadataToDB:(NSDictionary *)dict {
+    // 1.将元数据从字典中取出来，并组成一个新的元数据字典
+    NSDictionary *tmpDict = [dict valueForKey:@"data"];
+    NSMutableDictionary *metaDataMutableDict = [NSMutableDictionary dictionary];
+    for (NSString *key in tmpDict.allKeys) {
+        if (![key isEqualToString:@"modules"] && ![key isEqualToString:@"action"]) {
+            [metaDataMutableDict setObject:[tmpDict objectForKey:key] forKey:key];
+        }
+    }
+    // 2.将元数据字典写入数据库
+    [[ConfigDB shareDB] metaDataToDB:metaDataMutableDict];
+}
+
+/**
  删除老版本数据库
  */
 - (void)deleteOldDB {
     
+}
+
+- (void)cityChanged:(NSString *)cityid {
+    [self deleteOldDB];
 }
 
 -(void)registerWithKey:(NSString *)key modelClassName:(NSString *)className {
@@ -181,7 +204,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         [self analyticalData];
     } else {
         self.allData = nil;
-        [[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
+        //[[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
         NSLog(@"配置中心网络访问失败：%@",error);
     }
 }
