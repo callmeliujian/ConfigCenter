@@ -8,14 +8,25 @@
 
 #import "ViewController.h"
 #import "LJConfigManager.h"
-#import "AFNetworking.h"
+#import "ConfigDB.h"
 
-//#import "ConfigDB.h"
-#import "FMDatabase.h"
+@interface ViewController ()<UIPickerViewDelegate, UIPickerViewDataSource>
 
-@interface ViewController ()
+@property (nonatomic, strong) UILabel *cityLael;
 
-@property (nonatomic, strong) FMDatabase *configDB;
+@property (nonatomic, strong) UIPickerView *cityPicker;
+@property (nonatomic, strong) UIPickerView *allPicker;
+
+@property (weak, nonatomic) IBOutlet UIPickerView *modelPicker;
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+
+@property (nonatomic, strong) NSArray *cityArray;
+@property (nonatomic, strong) NSArray *appArray;
+@property (nonatomic, strong) NSArray *platArray;
+@property (nonatomic, strong) NSArray *userVersionArray;
+
+@property (nonatomic, strong) NSArray *modelArray;
+@property (nonatomic, strong) NSArray *versionArray;
 
 @end
 
@@ -24,70 +35,126 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    [manager GET:@"http://www.baidu.com" parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-//        NSLog(@"JSON: %@", responseObject);
-//    } failure:^(NSURLSessionTask *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
+    self.cityLael = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 60, 30)];
+    self.cityLael.text = @"城市：";
+    [self.view addSubview:self.cityLael];
+    self.cityPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(100, 20, 80, 100)];
+    [self.view addSubview:self.cityPicker];
+    
+    self.allPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10, 120, [UIScreen mainScreen].bounds.size.width, 100)];
+    [self.view addSubview:self.allPicker];
+    self.appArray = [[NSArray alloc] initWithObjects:@"suyun", @"123", nil];
+    self.platArray = [[NSArray alloc] initWithObjects:@"ios", nil];
+    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"2", nil];
+    
+    
+    self.cityPicker.delegate = self;
+    self.cityPicker.dataSource = self;
+    self.allPicker.delegate = self;
+    self.allPicker.dataSource = self;
+    
+    self.modelPicker.delegate = self;
+    self.modelPicker.dataSource = self;
+    self.textView.editable = NO;
+    
     [[LJConfigManager shareInstance] createManager];
     
-//    NSArray *array = [[NSArray alloc] initWithObjects:@"1", @"2", @"3", nil];
-//
-//    [self createTable:@"wwww"];
-//
-//    [self arrayToDB:array withTableName:@"wwww"];
     
 }
 
-- (BOOL)createTable:(NSString *)tableName {
-    if (tableName == nil || [tableName isEqualToString:@""]) return NO;
-    NSString *sql = [NSString stringWithFormat:@"create table IF NOT EXISTS %@ (id integer primary key autoincrement, key text, value text);", tableName];
-    [[self class] openDB];
-    BOOL success = [self.configDB executeStatements:sql];
-    [[self class] closeDB];
-    return success;
+#pragma mark - UIPickerViewDataSource
+
+/**
+ 指定picker有几个表盘
+ */
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    if (pickerView == self.allPicker) {
+        return 3;
+    } else
+        return 1;
 }
 
-- (void)arrayToDB:(NSArray *)array withTableName:(NSString *)tableName {
-    if (array == nil || ![array isKindOfClass:[NSArray class]]) return;
-    [[self class] openDB];
-    for (NSString *key in array) {
-        NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
-        FMResultSet *result = [self.configDB executeQuery:sql];
-        if ([result next]) {
-            NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET key='%@' WHERE key = '%@'",tableName,key,key];
-            BOOL success = [self.configDB executeUpdate:updataSql];
-            if (!success) NSLog(@"配置中心修改数据失败");
+/**
+ 每个表盘显示几行
+ */
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    if (pickerView == self.cityPicker) {
+        return  self.cityArray.count;
+    } else if (pickerView == self.allPicker) {
+        if (component == 0) {
+            return self.appArray.count;
+        } else if (component == 1) {
+            return self.platArray.count;
+        } else if (component == 2) {
+            return self.userVersionArray.count;
         } else {
-            NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key) VALUES (?)",tableName];
-            BOOL success = [self.configDB executeUpdate:insertSql, key];
-            if (!success) NSLog(@"配置中心插入数据失败");
+            return 1;
         }
     }
-    [[self class] closeDB];
-}
-
-- (BOOL)openDB {
-    return [self.configDB open];
-}
-
-- (BOOL)closeDB {
-    return [self.configDB close];
-}
-
-- (FMDatabase *)configDB {
-    if (!_configDB) {
-        //        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) firstObject];
-        //        NSString *filePath = [path stringByAppendingPathComponent:@"tmp.db"];
-        //        _configDB = [FMDatabase databaseWithPath:filePath];
-        
-        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) firstObject];
-        NSString *filePath = [path stringByAppendingPathComponent:@"tmp.db"];
-        _configDB = [FMDatabase databaseWithPath:filePath];
-        
+    else {
+        return self.modelArray.count;
     }
-    return _configDB;
+    
+}
+
+#pragma mark - UIPickerViewDelegate
+
+/**
+ 表盘显示的数据
+ */
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    if (pickerView == self.cityPicker) {
+        return  self.cityArray[row];
+    }  else if (pickerView == self.allPicker) {
+        if (component == 0) {
+            return self.appArray[row];
+        } else if (component == 1) {
+            return self.platArray[row];
+        } else {
+            return self.userVersionArray[row];
+        }
+    }
+    else if (pickerView ==self.modelPicker){
+        return self.modelArray[row];
+    } else {
+        return @"无数据";
+    }
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    if (pickerView == self.cityPicker) {
+        NSLog(@"%ld",(long)row);
+    } else {
+        if (self.modelArray.count == 0) {
+            NSLog(@"modelArray数组为空");
+            return;
+        }
+        NSArray *array = [[ConfigManager shareInstance] getAllDataWithTableName:self.modelArray[row]];
+        NSString *tempString = [array componentsJoinedByString:@","];
+        self.textView.text = tempString;
+    }
+}
+
+
+#pragma mark - Lazy
+
+- (NSArray *)cityArray {
+    if (!_cityArray) {
+        _cityArray = [[NSArray alloc] initWithObjects:@"全国",@"北京",@"天津", nil];
+    }
+    return _cityArray;
+}
+
+- (NSArray *)modelArray {
+    _modelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    return _modelArray;
+}
+
+- (NSArray *)versionArray {
+    if (!_versionArray) {
+        _versionArray = [[NSArray alloc] initWithObjects:@"-1", nil];
+    }
+    return _versionArray;
 }
 
 

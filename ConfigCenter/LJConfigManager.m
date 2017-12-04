@@ -44,7 +44,8 @@
     [configParam setObject:@"pt" forKey:@"platform"];
     [configParam setObject:@"1" forKey:@"appversion"];
     [configParam setObject:@"-1" forKey:@"cityid"];
-    [configParam setObject:@"-1" forKey:@"version"];
+    NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
+    [configParam setObject:versionStr forKey:@"version"];
     [configParam setObject:@"1001" forKey:@"encryptid"];
     [configParam setObject:currentTime forKey:@"time"];
     [configParam setObject:res_sha1 forKey:@"res"];

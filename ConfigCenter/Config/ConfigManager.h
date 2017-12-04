@@ -12,21 +12,17 @@
 @protocol ConfigManagerDelegate <NSObject>
 
 @optional
-
 //增量更新
-- (void) partKeysChange:(NSDictionary *)keyValue;
+- (void) partKeysChange;
 //全量更新
-- (void) allKeysChange:(NSDictionary *)keyValue;
-
-//城市id变化
-- (void) cityIdChange;
-
-//数据变化
-- (void) configDataChange;
-
+- (void) allKeysChange;
 //没有数据更新
 - (void) congfigNoChange;
 
+/**
+ 网络问题，没有获取到数据
+ */
+- (void) failureNetWork;
 @end
 
 @interface ConfigManager : NSObject
@@ -34,10 +30,12 @@
 @property (nonatomic, strong) NSString *cityid;
 @property (nonatomic, strong) ConfigAdaptor *adaptor;
 @property (nonatomic, strong) NSDictionary *params;
+@property (nonatomic, assign) id<ConfigManagerDelegate> delegate;
 
 
 + (instancetype)shareInstance;
 - (void)setupParams:(NSDictionary *)params;
+- (NSString *)getConfigVersion;
 
 - (void)addDelegate:(id<ConfigManagerDelegate>)delegate;
 - (void)removeDelegate:(id<ConfigManagerDelegate>)delegate;
@@ -65,4 +63,10 @@
  */
 - (void)cityChanged:(NSString *)cityid;
 
+/**
+ 获得配置中心数据所有表名
+ */
+- (NSArray *)getAllConfigCenterTableName;
+
+- (NSArray *)getAllDataWithTableName:(NSString *)tabelName;
 @end

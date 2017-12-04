@@ -124,15 +124,10 @@
     }
 }
 
-- (void)deleteTable:(NSString *)tableName {
-    [[ConfigDB shareDB] openDB];
-    if (tableName == nil) {
-        
-    } else {
-        
-    }
-    [[ConfigDB shareDB] closeDB];
-}
+
+
+    
+
 
 #pragma mark - 数据库相关操作
 
@@ -191,15 +186,67 @@
     return;
 }
 
+/**
+ 根据表名删除数据库里的表
+
+ @param tableName 表名
+ */
+- (void)deleteTable:(NSString *)tableName {
+    if (tableName == nil || [tableName isEqualToString:@""]) return;
+    [[ConfigDB shareDB] openDB];
+    NSString *sql = [NSString stringWithFormat:@"DROP TABLE %@", tableName];
+    BOOL success = [self.configDB executeUpdate:sql];
+    if (success) {
+        NSLog(@"删除表%@成功",tableName);
+    } else {
+        NSLog(@"删除表%@失败",tableName);
+    }
+    [[ConfigDB shareDB] closeDB];
+}
+
+- (void)deleteDB {
+    
+}
+
 - (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName {
     if (![key isKindOfClass:[NSString class]] || tableName == nil || [tableName isEqualToString:@""] || [key  isEqual: @""]) return @"";
     NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
+    [[ConfigDB shareDB] openDB];
     FMResultSet *result = [self.configDB executeQuery:sql];
     while ([result next]) {
         return [result stringForColumn:@"value"];
     }
+    [[ConfigDB shareDB] closeDB];
     return @"";
 }
+
+- (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName {
+    if ([tableName isEqualToString:@""] || ![tableName isKindOfClass:[NSString class]]) return nil;
+    [[ConfigDB shareDB] openDB];
+    NSMutableArray *mutableArr = [NSMutableArray array];
+    NSString *sql = [NSString stringWithFormat:@"select * from %@",tableName];
+    FMResultSet *result = [self.configDB executeQuery:sql];
+    while ([result next]) {
+        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:[result stringForColumn:@"value"], [result stringForColumn:@"key"], nil];
+        [mutableArr addObject:dic];
+    }
+    [[ConfigDB shareDB] closeDB];
+    return mutableArr;
+}
+
+- (NSArray *)recriveAllTbaleName {
+    [[ConfigDB shareDB] openDB];
+    NSString *sql = @"SELECT * FROM sqlite_master where type='table';";
+    FMResultSet *result = [self.configDB executeQuery:sql];
+    NSMutableArray *tableNameArray = [NSMutableArray array];
+    while (result.next) {
+        NSString *tableName = [result stringForColumnIndex:1];
+        [tableNameArray addObject:tableName];
+    }
+    [[ConfigDB shareDB] closeDB];
+    return tableNameArray;
+}
+
 
 /**
  把数据库的数据转化为数组字典

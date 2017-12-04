@@ -50,4 +50,11 @@
  */
 - (void)deleteTable:(NSString *)tableName;
 
+- (NSArray *)recriveAllTbaleName;
+/**
+ 获取tableName里所有数据
+ */
+- (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName;
+- (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName;
+
 @end
