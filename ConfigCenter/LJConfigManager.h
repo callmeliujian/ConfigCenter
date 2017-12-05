@@ -13,6 +13,8 @@
 
 @property (nonatomic, strong) NSArray *keyArray;
 
+@property (nonatomic, strong) NSDictionary *param;
+
 + (instancetype)shareInstance;
 - (void)createManager;
 

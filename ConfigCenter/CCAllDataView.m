@@ -8,6 +8,7 @@
 
 #import "CCAllDataView.h"
 #import "ConfigManager.h"
+#import "LJConfigManager.h"
 
 @interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -25,6 +26,10 @@
 
 @property (nonatomic, strong) UIButton *button;
 
+@property (nonatomic, strong) NSMutableDictionary *param;
+
+@property (nonatomic, strong) LJConfigManager *configManager;
+
 @end
 
 @implementation CCAllDataView
@@ -40,6 +45,7 @@
     self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.button.frame = CGRectMake(180, 80, 80, 30);
     [self.button setTitle:@"获取数据" forState:UIControlStateNormal];
+    [self.button addTarget:self action:@selector(buttonClicked) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.button];
     
     self.cityPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(100, 50, 80, 100)];
@@ -57,7 +63,7 @@
     self.cityArray = [[NSArray alloc] initWithObjects:@"全国", nil];
     self.appArray = [[NSArray alloc] initWithObjects:@"suyun", @"123", nil];
     self.platArray = [[NSArray alloc] initWithObjects:@"ios", nil];
-    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"2", nil];
+    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"1.1.1", nil];
     
     self.cityPicker.delegate = self;
     self.cityPicker.dataSource = self;
@@ -67,6 +73,13 @@
     self.modelPicker.dataSource = self;
 
     self.textView.editable = NO;
+    
+    self.param = [NSMutableDictionary dictionary];
+    [self.param setObject:@"1" forKey:@"appversion"];
+    
+    self.configManager = [LJConfigManager shareInstance];
+    self.configManager.param = self.param;
+    [self.configManager createManager];
     
     return self;
 }
@@ -134,7 +147,15 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (pickerView == self.cityPicker) {
-        NSLog(@"%ld",(long)row);
+        [self.param setObject:@"-1" forKey: @"cityid"];
+    } else if (pickerView == self.allPicker) {
+        if (component == 0) {
+            
+        } else if (component == 1) {
+            
+        } else {
+            [self.param setObject:self.userVersionArray[row] forKey:@"appversion"];
+        }
     } else {
         if (self.modelArray.count == 0) {
             NSLog(@"modelArray数组为空");
@@ -144,6 +165,10 @@
         NSString *tempString = [array componentsJoinedByString:@","];
         self.textView.text = tempString;
     }
+}
+
+- (void)buttonClicked {
+    [self.configManager createManager];
 }
 
 #pragma mark - Lazy

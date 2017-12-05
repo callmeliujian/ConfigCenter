@@ -42,7 +42,7 @@
     [configParam setObject:@"" forKey:@"DB"];
     [configParam setObject:@"suyun" forKey:@"app"];
     [configParam setObject:@"pt" forKey:@"platform"];
-    [configParam setObject:@"1" forKey:@"appversion"];
+    [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
     [configParam setObject:@"-1" forKey:@"cityid"];
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
     [configParam setObject:versionStr forKey:@"version"];

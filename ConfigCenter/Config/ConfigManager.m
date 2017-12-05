@@ -140,6 +140,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self.delegate failureNetWork];
         }
     }
+    str = nil;
     
 }
 
