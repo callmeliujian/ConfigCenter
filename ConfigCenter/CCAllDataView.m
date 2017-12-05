@@ -61,6 +61,8 @@
     [self addSubview:self.dbModelPicker];
     
     self.textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 350, [UIScreen mainScreen].bounds.size.width, 500)];
+    self.textView.editable = NO;
+
     [self addSubview:self.textView];
     
     self.cityArray = [[NSArray alloc] initWithObjects:@"全国", nil];
@@ -75,7 +77,6 @@
     self.dbModelPicker.delegate = self;
     self.dbModelPicker.dataSource = self;
 
-    self.textView.editable = NO;
     
     self.param = [NSMutableDictionary dictionary];
     [self.param setObject:@"1" forKey:@"appversion"];

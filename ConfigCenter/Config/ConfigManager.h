@@ -31,6 +31,11 @@
 @property (nonatomic, strong) ConfigAdaptor *adaptor;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, assign) id<ConfigManagerDelegate> delegate;
+/**
+ YES：按模块获取数据
+ NO：正常获取数据
+ */
+@property (nonatomic, assign) BOOL isGetModelData;
 
 
 + (instancetype)shareInstance;

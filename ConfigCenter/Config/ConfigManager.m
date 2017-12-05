@@ -62,7 +62,12 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     self.delegates = [[NSMutableArray alloc] init];
     [self creatAdaptor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [self getConfigDataFromNetWork];
+    if (self.isGetModelData) {
+        [self getConfigDataFromNetWork1];
+    } else {
+        [self getConfigDataFromNetWork];
+    }
+    
 }
 
 - (void)addDelegate:(id<ConfigDelegate>)delegate {
@@ -90,7 +95,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 - (void)getConfigDataFromNetWork1 {
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
-    NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getmoduledetail?app=%@&platform=%@&appversion=%@&cityid=%@&module=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"module"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
+    NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getmoduledetail?app=%@&platform=%@&appversion=%@&cityid=%@&module=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"modelName"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
     NSString *test = @"http://mockhttp.cn/mock/suyun/123";
     NSLog(@"-------------ConfigCenter发送的请求地址为-----------------");
     NSLog(@"%@",stringURL);

@@ -32,8 +32,11 @@
 - (void)createManager {
     // 注册key关联的model类名称
     [self ConfigRegister];
-    if (self.isDeleteBD)
+    if (self.isDeleteBD){
         [[ConfigManager shareInstance] deleteOldDB];
+        self.isDeleteBD = NO;
+    }
+    
     long long recordTime = [[NSDate date] timeIntervalSince1970]*1000;
     NSString *currentTime = [NSString stringWithFormat:@"%lld", recordTime];
     NSString *res = [NSString stringWithFormat:@"encryptid=%@secretKey=%@time=%@",@"1001", @"wubashenqi", currentTime];
@@ -52,6 +55,8 @@
     [configParam setObject:@"1001" forKey:@"encryptid"];
     [configParam setObject:currentTime forKey:@"time"];
     [configParam setObject:res_sha1 forKey:@"res"];
+    [configParam setObject:[self.param objectForKey:@"modelName"] forKey:@"modelName"];
+    [ConfigManager shareInstance].isGetModelData = self.isGetModelData;
     [[ConfigManager shareInstance] setupParams:configParam];
     [[ConfigManager shareInstance] addDelegate:self];
 }

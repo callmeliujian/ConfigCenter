@@ -14,8 +14,15 @@
 @property (nonatomic, strong) NSArray *keyArray;
 
 @property (nonatomic, strong) NSDictionary *param;
-
+/**
+ 是否删除老数据库
+ */
 @property (nonatomic, assign) BOOL isDeleteBD;
+/**
+ YES：按模块获取数据
+ NO：正常获取数据
+ */
+@property (nonatomic, assign) BOOL isGetModelData;
 
 + (instancetype)shareInstance;
 - (void)createManager;
