@@ -22,7 +22,7 @@
 @property (nonatomic, strong) NSArray *appArray;
 @property (nonatomic, strong) NSArray *platArray;
 @property (nonatomic, strong) NSArray *userVersionArray;
-@property (nonatomic, strong) NSArray *modelArray;
+@property (nonatomic, strong) NSArray *dbmodelArray;
 
 @property (nonatomic, strong) UIButton *button;
 
@@ -114,7 +114,7 @@
         }
     }
     else {
-        return self.modelArray.count;
+        return self.dbmodelArray.count;
         return 0;
     }
     
@@ -138,7 +138,7 @@
         }
     }
     else if (pickerView ==self.dbModelPicker){
-        return self.modelArray[row];
+        return self.dbmodelArray[row];
     }
     else {
         return @"无数据";
@@ -157,11 +157,11 @@
             [self.param setObject:self.userVersionArray[row] forKey:@"appversion"];
         }
     } else {
-        if (self.modelArray.count == 0) {
+        if (self.dbmodelArray.count == 0) {
             NSLog(@"modelArray数组为空");
             return;
         }
-        NSArray *array = [[ConfigManager shareInstance] getAllDataWithTableName:self.modelArray[row]];
+        NSArray *array = [[ConfigManager shareInstance] getAllDataWithTableName:self.dbmodelArray[row]];
         NSString *tempString = [array componentsJoinedByString:@","];
         self.textView.text = tempString;
     }
@@ -173,9 +173,9 @@
 
 #pragma mark - Lazy
 
-- (NSArray *)modelArray {
-    _modelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
-    return _modelArray;
+- (NSArray *)dbmodelArray {
+    _dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    return _dbmodelArray;
 }
 
 
