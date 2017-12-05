@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) UIPickerView *cityPicker;
 @property (nonatomic, strong) UIPickerView *allPicker;
-@property (nonatomic, strong) UIPickerView *modelPicker;
+@property (nonatomic, strong) UIPickerView *dbModelPicker;
 
 @property (nonatomic, strong) UITextView *textView;
 
@@ -54,8 +54,8 @@
     self.allPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10, 150, [UIScreen mainScreen].bounds.size.width, 100)];
     [self addSubview:self.allPicker];
     
-    self.modelPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10, 250, [UIScreen mainScreen].bounds.size.width, 100)];
-    [self addSubview:self.modelPicker];
+    self.dbModelPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10, 250, [UIScreen mainScreen].bounds.size.width, 100)];
+    [self addSubview:self.dbModelPicker];
     
     self.textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 350, [UIScreen mainScreen].bounds.size.width, 500)];
     [self addSubview:self.textView];
@@ -69,8 +69,8 @@
     self.cityPicker.dataSource = self;
     self.allPicker.delegate = self;
     self.allPicker.dataSource = self;
-    self.modelPicker.delegate = self;
-    self.modelPicker.dataSource = self;
+    self.dbModelPicker.delegate = self;
+    self.dbModelPicker.dataSource = self;
 
     self.textView.editable = NO;
     
@@ -137,7 +137,7 @@
             return self.userVersionArray[row];
         }
     }
-    else if (pickerView ==self.modelPicker){
+    else if (pickerView ==self.dbModelPicker){
         return self.modelArray[row];
     }
     else {
