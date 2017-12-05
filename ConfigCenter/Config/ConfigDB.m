@@ -9,6 +9,7 @@
 
 #import "ConfigDB.h"
 #import "FMDatabase.h"
+#import "ConfigManager.h"
 
 @interface ConfigDB ()
 
@@ -294,13 +295,16 @@
 
 - (FMDatabase *)configDB {
     if (!_configDB) {
-//        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) firstObject];
-//        NSString *filePath = [path stringByAppendingPathComponent:@"tmp.db"];
-//        _configDB = [FMDatabase databaseWithPath:filePath];
-        
-        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) firstObject];
-        NSString *filePath = [path stringByAppendingPathComponent:@"tmp.db"];
-        _configDB = [FMDatabase databaseWithPath:filePath];
+        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        //NSString *dbNamePath = [[ConfigManager shareInstance].params objectForKey:@"dbNamePath"];
+        NSString *dbNamePath = @"test.db";
+        NSString *dbPath = [NSString stringWithFormat:@"%@/%@", path, [dbNamePath lastPathComponent]];
+        NSString *filePath = [[NSBundle mainBundle] resourcePath];
+        NSString *doc_path = [filePath stringByAppendingPathComponent:dbNamePath];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dbPath]) {
+            [[NSFileManager defaultManager] copyItemAtPath:doc_path toPath:dbPath error:nil];
+        }
+        _configDB = [FMDatabase databaseWithPath:dbPath];
         
     }
     return _configDB;

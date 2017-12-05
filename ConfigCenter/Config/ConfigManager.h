@@ -36,6 +36,7 @@
 + (instancetype)shareInstance;
 - (void)setupParams:(NSDictionary *)params;
 - (NSString *)getConfigVersion;
+- (void)deleteOldDB;
 
 - (void)addDelegate:(id<ConfigManagerDelegate>)delegate;
 - (void)removeDelegate:(id<ConfigManagerDelegate>)delegate;

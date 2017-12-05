@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) NSDictionary *param;
 
+@property (nonatomic, assign) BOOL isDeleteBD;
+
 + (instancetype)shareInstance;
 - (void)createManager;
 

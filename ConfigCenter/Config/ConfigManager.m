@@ -132,7 +132,9 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         } else if (actionInt == ACTION_FULL) { //全量更新
             // 删除旧数据库、将数据缓存到新数据库
             [self deleteOldDB];
-            [self storageAllDataToDB:responseDic[@"data"]];
+            [self storageDataToDB:responseDic[@"data"]];
+            if ([self.delegate respondsToSelector:@selector(allKeysChange)])
+                [self.delegate allKeysChange];
         }
     } else { //请求失败, 加载本地数据
         NSLog(@"配置中心网络请求失败:%@",[responseDic valueForKey:@"codeMsg"]);
@@ -140,8 +142,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self.delegate failureNetWork];
         }
     }
-    str = nil;
-    
+    self.allData = nil;
 }
 
 /**
@@ -190,7 +191,13 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  删除老版本数据库
  */
 - (void)deleteOldDB {
-    [[ConfigDB shareDB] deleteTable:nil];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *sourcePath = [NSString stringWithFormat:@"%@/test.db", path];
+    if ([[NSFileManager defaultManager]  fileExistsAtPath:sourcePath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:sourcePath error:nil];
+        return;
+    }
+    //[[ConfigDB shareDB] deleteTable:nil];
 }
 
 - (void)cityChanged:(NSString *)cityid {
@@ -212,9 +219,9 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (NSArray *)getAllConfigCenterTableName {
-    if (!_tableNameArray) {
+    //if (!_tableNameArray) {
         _tableNameArray = [[ConfigDB shareDB] recriveAllTbaleName];;
-    }
+    //}
     return _tableNameArray;
 }
 

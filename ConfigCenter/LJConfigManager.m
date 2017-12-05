@@ -32,6 +32,8 @@
 - (void)createManager {
     // 注册key关联的model类名称
     [self ConfigRegister];
+    if (self.isDeleteBD)
+        [[ConfigManager shareInstance] deleteOldDB];
     long long recordTime = [[NSDate date] timeIntervalSince1970]*1000;
     NSString *currentTime = [NSString stringWithFormat:@"%lld", recordTime];
     NSString *res = [NSString stringWithFormat:@"encryptid=%@secretKey=%@time=%@",@"1001", @"wubashenqi", currentTime];
@@ -45,6 +47,7 @@
     [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
     [configParam setObject:@"-1" forKey:@"cityid"];
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
+    if ([versionStr isEqualToString:@""]) versionStr = @"-1";
     [configParam setObject:versionStr forKey:@"version"];
     [configParam setObject:@"1001" forKey:@"encryptid"];
     [configParam setObject:currentTime forKey:@"time"];

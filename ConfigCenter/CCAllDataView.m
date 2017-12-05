@@ -9,8 +9,9 @@
 #import "CCAllDataView.h"
 #import "ConfigManager.h"
 #import "LJConfigManager.h"
+#import "ConfigManager.h"
 
-@interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource>
+@interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource, ConfigManagerDelegate>
 
 @property (nonatomic, strong) UIPickerView *cityPicker;
 @property (nonatomic, strong) UIPickerView *allPicker;
@@ -37,6 +38,8 @@
 - (instancetype)init {
     self = [super init];
     if (!self) return nil;
+    
+    [ConfigManager shareInstance].delegate = self;
     
     UILabel *cityLael = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 60, 30)];
     cityLael.text = @"城市：";
@@ -81,7 +84,27 @@
     self.configManager.param = self.param;
     [self.configManager createManager];
     
+    self.dbmodelArray = [NSArray array];
+    
     return self;
+}
+
+- (void) allKeysChange {
+    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    [self.dbModelPicker reloadAllComponents];
+    
+}
+
+- (void) partKeysChange {
+    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    [self.dbModelPicker reloadAllComponents];
+    
+}
+
+- (void) congfigNoChange {
+    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    [self.dbModelPicker reloadAllComponents];
+    
 }
 
 #pragma mark - UIPickerViewDataSource
@@ -154,6 +177,8 @@
         } else if (component == 1) {
             
         } else {
+            self.configManager.isDeleteBD = YES;
+            [self dbmodelArray];
             [self.param setObject:self.userVersionArray[row] forKey:@"appversion"];
         }
     } else {
@@ -173,10 +198,10 @@
 
 #pragma mark - Lazy
 
-- (NSArray *)dbmodelArray {
-    _dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
-    return _dbmodelArray;
-}
+//- (NSArray *)dbmodelArray {
+//    _dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+//    return _dbmodelArray;
+//}
 
 
 @end
