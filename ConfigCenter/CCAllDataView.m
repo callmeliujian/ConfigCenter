@@ -23,6 +23,8 @@
 @property (nonatomic, strong) NSArray *userVersionArray;
 @property (nonatomic, strong) NSArray *modelArray;
 
+@property (nonatomic, strong) UIButton *button;
+
 @end
 
 @implementation CCAllDataView
@@ -34,6 +36,12 @@
     UILabel *cityLael = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 60, 30)];
     cityLael.text = @"城市：";
     [self addSubview:cityLael];
+    
+    self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.button.frame = CGRectMake(180, 80, 80, 30);
+    [self.button setTitle:@"获取数据" forState:UIControlStateNormal];
+    [self addSubview:self.button];
+    
     self.cityPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(100, 50, 80, 100)];
     [self addSubview:self.cityPicker];
     
