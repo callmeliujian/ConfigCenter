@@ -12,7 +12,7 @@
 #import "ConfigManager.h"
 #import "CCPicekerViewDataSoure.h"
 
-@interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource, ConfigManagerDelegate>
+@interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource, CCPicekerViewDataSoureDelegate>
 
 @property (nonatomic, strong) UIPickerView *cityPicker;
 @property (nonatomic, strong) UIPickerView *allPicker;
@@ -31,8 +31,10 @@
 
 @property (nonatomic, strong) NSMutableDictionary *param;
 
-@property (nonatomic, strong) LJConfigManager *configManager;
+
 @property (nonatomic, strong) CCPicekerViewDataSoure *pickerDataSure;
+
+@property (nonatomic, strong) LJConfigManager *configManager;
 
 @end
 
@@ -42,8 +44,10 @@
     self = [super init];
     if (!self) return nil;
     
-    [ConfigManager shareInstance].delegate = self;
+    self.configManager = [LJConfigManager shareInstance];
+    
     self.pickerDataSure = [[CCPicekerViewDataSoure alloc] init];
+    self.pickerDataSure.delegate = self;
     
     UILabel *cityLael = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 60, 30)];
     cityLael.text = @"城市：";
@@ -73,54 +77,20 @@
     self.appArray = self.pickerDataSure.appArray;
     self.platArray = self.pickerDataSure.platArray;
     self.userVersionArray = self.pickerDataSure.userVersionArray;
+    self.dbmodelArray = self.pickerDataSure.dbmodelArray;
     
     self.cityPicker.delegate = self;
     self.cityPicker.dataSource = self;
     self.allPicker.delegate = self;
     self.allPicker.dataSource = self;
     self.dbModelPicker.delegate = self;
-    self.dbModelPicker.dataSource = self;
-
-    [self configParam];
-    
-    
-    self.configManager = [LJConfigManager shareInstance];
-    self.configManager.param = self.param;
-    [self.configManager createManager];
-    
-    self.dbmodelArray = [NSArray array];
+    self.dbModelPicker.dataSource = self.pickerDataSure;
     
     return self;
 }
 
-- (void)configParam {
-    self.param = [NSMutableDictionary dictionary];
-    [self.param setObject:@"1" forKey:@"appversion"];
-    [self.param setObject:@"" forKey:@"modelName"];
-    [self.param setObject:@"suyunUser" forKey:@"app"];
-    [self.param setObject:@"pt" forKey:@"platform"];
-}
-
-- (void) allKeysChange {
-    [self updatePickerVeiw];
-}
-
-- (void) partKeysChange {
-    [self updatePickerVeiw];
-    
-}
-
-- (void) congfigNoChange {
-    [self updatePickerVeiw];
-    
-}
-
-- (void) failureNetWork:(NSDictionary *)errorDict {
-    
-}
-
-- (void)updatePickerVeiw {
-    self.dbmodelArray = self.configManager.allTableNames;
+- (void)roaldPickerView {
+    self.dbmodelArray = self.pickerDataSure.dbmodelArray;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.dbModelPicker reloadAllComponents];
     });
@@ -193,14 +163,13 @@
     } else if (pickerView == self.allPicker) {
         if (component == 0) {
             self.configManager.isDeleteBD = YES;
-            [self.param setObject:self.appArray[row] forKey:@"app"];
+            [self.pickerDataSure.param setObject:self.appArray[row] forKey:@"app"];
         } else if (component == 1) {
             self.configManager.isDeleteBD = YES;
-            [self.param setObject:self.platArray[row] forKey:@"platform"];
+            [self.pickerDataSure.param setObject:self.platArray[row] forKey:@"platform"];
         } else {
             self.configManager.isDeleteBD = YES;
-            [self dbmodelArray];
-            [self.param setObject:self.userVersionArray[row] forKey:@"appversion"];
+            [self.pickerDataSure.param setObject:self.userVersionArray[row] forKey:@"appversion"];
         }
     } else {
         if (self.dbmodelArray.count == 0) {

@@ -7,12 +7,37 @@
 //
 
 #import "CCPicekerViewDataSoure.h"
+#import "ConfigManager.h"
+#import "LJConfigManager.h"
 
-@interface CCPicekerViewDataSoure () <UIPickerViewDataSource>
+@interface CCPicekerViewDataSoure () <UIPickerViewDataSource, ConfigManagerDelegate>
+
+@property (nonatomic, strong) LJConfigManager *configManager;
 
 @end
 
 @implementation CCPicekerViewDataSoure
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [ConfigManager shareInstance].delegate = self;
+        self.configManager = [LJConfigManager shareInstance];
+        [self configParam];
+        self.configManager.param = self.param;
+        [self.configManager createManager];
+    }
+    return self;
+}
+
+- (void)configParam {
+    self.param = [NSMutableDictionary dictionary];
+    [self.param setObject:@"1" forKey:@"appversion"];
+    [self.param setObject:@"" forKey:@"modelName"];
+    [self.param setObject:@"suyunUser" forKey:@"app"];
+    [self.param setObject:@"pt" forKey:@"platform"];
+}
 
 /**
  指定picker有几个表盘
@@ -46,6 +71,33 @@
         return 0;
     }
     
+}
+
+#pragma mark - ConfigManagerDelegate
+
+- (void) allKeysChange {
+    self.dbmodelArray = self.configManager.allTableNames;
+    [self useDelegateMethod];
+}
+
+- (void) partKeysChange {
+    self.dbmodelArray = self.configManager.allTableNames;
+    [self useDelegateMethod];
+}
+
+- (void) congfigNoChange {
+    self.dbmodelArray = self.configManager.allTableNames;
+    [self useDelegateMethod];
+}
+
+- (void) failureNetWork:(NSDictionary *)errorDict {
+    
+}
+
+- (void)useDelegateMethod {
+    if ([self.delegate respondsToSelector:@selector(roaldPickerView)]) {
+        [self.delegate roaldPickerView];
+    }
 }
 
 #pragma mark - Lazy

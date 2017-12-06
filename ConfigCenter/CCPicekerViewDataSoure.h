@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@protocol CCPicekerViewDataSoureDelegate <NSObject>
+
+@optional
+- (void)roaldPickerView;
+
+@end
+
 @interface CCPicekerViewDataSoure : NSObject
 
 @property (nonatomic, strong) UIPickerView *allPicker;
@@ -19,5 +26,9 @@
 @property (nonatomic, strong) NSArray *platArray;
 @property (nonatomic, strong) NSArray *userVersionArray;
 @property (nonatomic, strong) NSArray *dbmodelArray;
+
+@property (nonatomic, strong) NSMutableDictionary *param;
+
+@property (nonatomic, assign) id<CCPicekerViewDataSoureDelegate> delegate;
 
 @end
