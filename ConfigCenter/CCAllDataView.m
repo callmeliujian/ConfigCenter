@@ -59,6 +59,7 @@
     
     self.cityPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(100, 50, 80, 100)];
     [self addSubview:self.cityPicker];
+    self.pickerDataSure.cityPicker = self.cityPicker;
     
     self.allPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10, 150, [UIScreen mainScreen].bounds.size.width, 100)];
     [self addSubview:self.allPicker];
@@ -77,7 +78,7 @@
     self.userVersionArray = self.pickerDataSure.userVersionArray;
     
     self.cityPicker.delegate = self;
-    self.cityPicker.dataSource = self;
+    self.cityPicker.dataSource = self.pickerDataSure;
     self.allPicker.delegate = self;
     self.allPicker.dataSource = self;
     self.dbModelPicker.delegate = self;
