@@ -66,9 +66,9 @@
     [self addSubview:self.textView];
     
     self.cityArray = [[NSArray alloc] initWithObjects:@"全国", nil];
-    self.appArray = [[NSArray alloc] initWithObjects:@"suyun", @"123", nil];
-    self.platArray = [[NSArray alloc] initWithObjects:@"ios", nil];
-    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"1.1.1", nil];
+    self.appArray = [[NSArray alloc] initWithObjects:@"suyunUser", @"suyun", @"123", @"banjiaguesttest", nil];
+    self.platArray = [[NSArray alloc] initWithObjects:@"pt", @"Android", @"ios",nil];
+    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"1.1.1", @"6.6.6", @"4.8.3", @"4.8.2", @"1.0", @"7.7.7", @"1.2.3", @"2.2.2", @"3.3.3", @"4.4.4", @"5.5.5", nil];
     
     self.cityPicker.delegate = self;
     self.cityPicker.dataSource = self;
@@ -77,9 +77,8 @@
     self.dbModelPicker.delegate = self;
     self.dbModelPicker.dataSource = self;
 
+    [self configParam];
     
-    self.param = [NSMutableDictionary dictionary];
-    [self.param setObject:@"1" forKey:@"appversion"];
     
     self.configManager = [LJConfigManager shareInstance];
     self.configManager.param = self.param;
@@ -88,6 +87,13 @@
     self.dbmodelArray = [NSArray array];
     
     return self;
+}
+
+- (void)configParam {
+    self.param = [NSMutableDictionary dictionary];
+    [self.param setObject:@"1" forKey:@"appversion"];
+    [self.param setObject:@"" forKey:@"modelName"];
+    [self.param setObject:@"suyunUser" forKey:@"app"];
 }
 
 - (void) allKeysChange {
@@ -174,7 +180,8 @@
         [self.param setObject:@"-1" forKey: @"cityid"];
     } else if (pickerView == self.allPicker) {
         if (component == 0) {
-            
+            self.configManager.isDeleteBD = YES;
+            [self.param setObject:self.appArray[row] forKey:@"app"];
         } else if (component == 1) {
             
         } else {
