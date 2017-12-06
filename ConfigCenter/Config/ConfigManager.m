@@ -43,6 +43,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 @property (nonatomic, strong) NSArray *modelKeyNameArray;
 
 @property (nonatomic, strong) NSArray *tableNameArray;
+
 @end
 
 @implementation ConfigManager

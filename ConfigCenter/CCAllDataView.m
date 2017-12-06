@@ -102,19 +102,19 @@
 }
 
 - (void) allKeysChange {
-    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    self.dbmodelArray = self.configManager.allTableNames;
     [self.dbModelPicker reloadAllComponents];
     
 }
 
 - (void) partKeysChange {
-    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    self.dbmodelArray = self.configManager.allTableNames;
     [self.dbModelPicker reloadAllComponents];
     
 }
 
 - (void) congfigNoChange {
-    self.dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    self.dbmodelArray = self.configManager.allTableNames;
     [self.dbModelPicker reloadAllComponents];
     
 }

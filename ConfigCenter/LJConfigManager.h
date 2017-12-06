@@ -23,6 +23,10 @@
  NO：正常获取数据
  */
 @property (nonatomic, assign) BOOL isGetModelData;
+/**
+ 所有的表名
+ */
+@property (nonatomic, strong) NSArray *allTableNames;
 
 + (instancetype)shareInstance;
 - (void)createManager;

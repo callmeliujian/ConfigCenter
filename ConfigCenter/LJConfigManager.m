@@ -70,4 +70,9 @@
     [[ConfigManager shareInstance] registerWithKey:self.keyArray[2] modelClassName:@"test3"];
 }
 
+- (NSArray *)allTableNames {
+    _allTableNames = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    return _allTableNames;
+}
+
 @end
