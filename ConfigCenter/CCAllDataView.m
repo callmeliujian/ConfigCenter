@@ -25,8 +25,6 @@
 @property (nonatomic, strong) NSArray *platArray;
 @property (nonatomic, strong) NSArray *userVersionArray;
 
-@property (nonatomic, strong) NSArray *dbmodelArray;
-
 @property (nonatomic, strong) UIButton *button;
 
 @property (nonatomic, strong) NSMutableDictionary *param;
@@ -77,7 +75,6 @@
     self.appArray = self.pickerDataSure.appArray;
     self.platArray = self.pickerDataSure.platArray;
     self.userVersionArray = self.pickerDataSure.userVersionArray;
-    self.dbmodelArray = self.pickerDataSure.dbmodelArray;
     
     self.cityPicker.delegate = self;
     self.cityPicker.dataSource = self;
@@ -90,7 +87,6 @@
 }
 
 - (void)roaldPickerView {
-    self.dbmodelArray = self.pickerDataSure.dbmodelArray;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.dbModelPicker reloadAllComponents];
     });
@@ -126,7 +122,7 @@
         }
     }
     else {
-        return self.dbmodelArray.count;
+        return self.pickerDataSure.dbmodelArray.count;
         return 0;
     }
     
@@ -150,7 +146,7 @@
         }
     }
     else if (pickerView ==self.dbModelPicker){
-        return self.dbmodelArray[row];
+        return self.pickerDataSure.dbmodelArray[row];
     }
     else {
         return @"无数据";
@@ -172,11 +168,11 @@
             [self.pickerDataSure.param setObject:self.userVersionArray[row] forKey:@"appversion"];
         }
     } else {
-        if (self.dbmodelArray.count == 0) {
+        if (self.pickerDataSure.dbmodelArray.count == 0) {
             NSLog(@"modelArray数组为空");
             return;
         }
-        NSArray *array = [[ConfigManager shareInstance] getAllDataWithTableName:self.dbmodelArray[row]];
+        NSArray *array = [[ConfigManager shareInstance] getAllDataWithTableName:self.pickerDataSure.dbmodelArray[row]];
         NSString *tempString = [array componentsJoinedByString:@","];
         self.textView.text = tempString;
     }
