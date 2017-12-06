@@ -10,6 +10,7 @@
 #import "ConfigManager.h"
 #import "LJConfigManager.h"
 #import "ConfigManager.h"
+#import "CCPicekerViewDataSoure.h"
 
 @interface CCAllDataView () <UIPickerViewDelegate, UIPickerViewDataSource, ConfigManagerDelegate>
 
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) NSArray *appArray;
 @property (nonatomic, strong) NSArray *platArray;
 @property (nonatomic, strong) NSArray *userVersionArray;
+
 @property (nonatomic, strong) NSArray *dbmodelArray;
 
 @property (nonatomic, strong) UIButton *button;
@@ -30,6 +32,7 @@
 @property (nonatomic, strong) NSMutableDictionary *param;
 
 @property (nonatomic, strong) LJConfigManager *configManager;
+@property (nonatomic, strong) CCPicekerViewDataSoure *pickerDataSure;
 
 @end
 
@@ -40,6 +43,7 @@
     if (!self) return nil;
     
     [ConfigManager shareInstance].delegate = self;
+    self.pickerDataSure = [[CCPicekerViewDataSoure alloc] init];
     
     UILabel *cityLael = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 60, 30)];
     cityLael.text = @"城市：";
@@ -65,10 +69,10 @@
 
     [self addSubview:self.textView];
     
-    self.cityArray = [[NSArray alloc] initWithObjects:@"全国", nil];
-    self.appArray = [[NSArray alloc] initWithObjects:@"suyunUser", @"suyun", @"123", @"banjiaguesttest", nil];
-    self.platArray = [[NSArray alloc] initWithObjects:@"pt", @"Android", @"ios",nil];
-    self.userVersionArray = [[NSArray alloc] initWithObjects:@"1", @"1.1.1", @"6.6.6", @"4.8.3", @"4.8.2", @"1.0", @"7.7.7", @"1.2.3", @"2.2.2", @"3.3.3", @"4.4.4", @"5.5.5", nil];
+    self.cityArray = self.pickerDataSure.cityArray;
+    self.appArray = self.pickerDataSure.appArray;
+    self.platArray = self.pickerDataSure.platArray;
+    self.userVersionArray = self.pickerDataSure.userVersionArray;
     
     self.cityPicker.delegate = self;
     self.cityPicker.dataSource = self;
