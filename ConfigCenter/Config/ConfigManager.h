@@ -22,7 +22,7 @@
 /**
  网络问题，没有获取到数据
  */
-- (void) failureNetWork;
+- (void) failureNetWork:(NSDictionary *)errorDict;
 @end
 
 @interface ConfigManager : NSObject

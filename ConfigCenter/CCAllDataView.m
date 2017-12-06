@@ -114,6 +114,10 @@
     
 }
 
+- (void) failureNetWork:(NSDictionary *)errorDict {
+    
+}
+
 #pragma mark - UIPickerViewDataSource
 
 /**

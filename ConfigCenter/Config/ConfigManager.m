@@ -143,8 +143,14 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         }
     } else { //请求失败, 加载本地数据
         NSLog(@"配置中心网络请求失败:%@",[responseDic valueForKey:@"codeMsg"]);
-        if ([self.delegate respondsToSelector:@selector(failureNetWork)]) {
-            [self.delegate failureNetWork];
+        NSLog(@"%@",[NSThread currentThread]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"配置中心配置请求失败" message:[responseDic valueForKey:@"codeMsg"] delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                    [alert show];
+        });
+
+        if ([self.delegate respondsToSelector:@selector(failureNetWork:)]) {
+            [self.delegate failureNetWork:responseDic];
         }
     }
     self.allData = nil;
