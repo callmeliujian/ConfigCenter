@@ -46,7 +46,7 @@
     [configParam setObject:@"10.37.18.173:8030" forKey:@"URL"];
     [configParam setObject:@"" forKey:@"DB"];
     [configParam setObject:[self.param objectForKey:@"app"]  forKey:@"app"];
-    [configParam setObject:@"pt" forKey:@"platform"];
+    [configParam setObject:[self.param objectForKey:@"platform"] forKey:@"platform"];
     [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
     [configParam setObject:@"-1" forKey:@"cityid"];
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];

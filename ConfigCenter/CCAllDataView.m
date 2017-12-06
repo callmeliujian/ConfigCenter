@@ -94,6 +94,7 @@
     [self.param setObject:@"1" forKey:@"appversion"];
     [self.param setObject:@"" forKey:@"modelName"];
     [self.param setObject:@"suyunUser" forKey:@"app"];
+    [self.param setObject:@"pt" forKey:@"platform"];
 }
 
 - (void) allKeysChange {
@@ -187,7 +188,8 @@
             self.configManager.isDeleteBD = YES;
             [self.param setObject:self.appArray[row] forKey:@"app"];
         } else if (component == 1) {
-            
+            self.configManager.isDeleteBD = YES;
+            [self.param setObject:self.platArray[row] forKey:@"platform"];
         } else {
             self.configManager.isDeleteBD = YES;
             [self dbmodelArray];
