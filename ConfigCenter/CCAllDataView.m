@@ -214,12 +214,5 @@
     [self.configManager createManager];
 }
 
-#pragma mark - Lazy
-
-//- (NSArray *)dbmodelArray {
-//    _dbmodelArray = [[ConfigManager shareInstance] getAllConfigCenterTableName];
-//    return _dbmodelArray;
-//}
-
 
 @end
