@@ -181,7 +181,9 @@
     // status = -1 删除
     if ([status intValue] == -1) {
         NSString *sql = [NSString stringWithFormat:@"delete from %@ where key = '%@'", tableName, key];
+        [[ConfigDB shareDB] openDB];
         BOOL success = [self.configDB executeUpdate:sql];
+        [[ConfigDB shareDB] openDB];
         if (!success) NSLog(@"配置中心删除数据失败");
     }
     return;
