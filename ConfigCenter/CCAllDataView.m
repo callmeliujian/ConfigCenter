@@ -102,25 +102,28 @@
 }
 
 - (void) allKeysChange {
-    self.dbmodelArray = self.configManager.allTableNames;
-    [self.dbModelPicker reloadAllComponents];
-    
+    [self updatePickerVeiw];
 }
 
 - (void) partKeysChange {
-    self.dbmodelArray = self.configManager.allTableNames;
-    [self.dbModelPicker reloadAllComponents];
+    [self updatePickerVeiw];
     
 }
 
 - (void) congfigNoChange {
-    self.dbmodelArray = self.configManager.allTableNames;
-    [self.dbModelPicker reloadAllComponents];
+    [self updatePickerVeiw];
     
 }
 
 - (void) failureNetWork:(NSDictionary *)errorDict {
     
+}
+
+- (void)updatePickerVeiw {
+    self.dbmodelArray = self.configManager.allTableNames;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.dbModelPicker reloadAllComponents];
+    });
 }
 
 #pragma mark - UIPickerViewDataSource
