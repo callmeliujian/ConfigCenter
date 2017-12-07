@@ -37,6 +37,7 @@
     [self.param setObject:@"" forKey:@"modelName"];
     [self.param setObject:@"suyunUser" forKey:@"app"];
     [self.param setObject:@"pt" forKey:@"platform"];
+    [self.param setObject:@"-1" forKey:@"cityid"];
 }
 
 /**
@@ -104,7 +105,7 @@
 
 - (NSArray *)cityArray {
     if (!_cityArray) {
-        _cityArray = [[NSArray alloc] initWithObjects:@"全国", nil];
+        _cityArray = [[NSArray alloc] initWithObjects:@"全国",@"北京", nil];
     }
     return _cityArray;
 }

@@ -48,7 +48,7 @@
     [configParam setObject:[self.param objectForKey:@"app"]  forKey:@"app"];
     [configParam setObject:[self.param objectForKey:@"platform"] forKey:@"platform"];
     [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
-    [configParam setObject:@"-1" forKey:@"cityid"];
+    [configParam setObject:[self.param objectForKey:@"cityid"] forKey:@"cityid"];
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
     if ([versionStr isEqualToString:@""]) versionStr = @"-1";
     [configParam setObject:versionStr forKey:@"version"];

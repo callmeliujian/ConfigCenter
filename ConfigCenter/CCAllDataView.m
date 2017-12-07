@@ -156,7 +156,13 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (pickerView == self.cityPicker) {
-        [self.param setObject:@"-1" forKey: @"cityid"];
+        self.configManager.isDeleteBD = YES;
+        if (row == 0) {
+            [self.pickerDataSure.param setObject:@"-1" forKey: @"cityid"];
+        } else if (row == 1) {
+            [self.pickerDataSure.param setObject:@"1" forKey: @"cityid"];
+        }
+        //[self.param setObject:@"-1" forKey: @"cityid"];
     } else if (pickerView == self.allPicker) {
         if (component == 0) {
             self.configManager.isDeleteBD = YES;

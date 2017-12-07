@@ -119,6 +119,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     
     NSError *error = nil;
     NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:self.allData options:NSJSONReadingMutableLeaves error:&error];
+    self.allData = nil;
     if (error) {
         NSLog(@"配置中心解析数据出错“%@",error);
         return;
@@ -154,7 +155,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self.delegate failureNetWork:responseDic];
         }
     }
-    self.allData = nil;
 }
 
 /**
