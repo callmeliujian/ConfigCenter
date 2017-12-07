@@ -25,8 +25,9 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  */
 @property (nonatomic, strong) NSMutableData *allData;
 /**
- 数据适配器
+ 是否重新获取过数据
  */
+@property (nonatomic, assign) BOOL retrieveData;
 
 @property (nonatomic, strong) NSMutableArray *delegates;
 
@@ -94,7 +95,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (void)getConfigDataFromNetWork1 {
-    
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
     NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getmoduledetail?app=%@&platform=%@&appversion=%@&cityid=%@&module=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"modelName"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
     NSString *test = @"http://mockhttp.cn/mock/suyun/123";
@@ -268,6 +268,21 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void) dataFromDBToMemory:(NSDictionary *)dic {
     [self deserializeToMemory:dic];
+}
+
+- (void) getFailureData:(NSDictionary *)dic {
+    if (self.retrieveData) {
+        NSString *cityId = [dic objectForKey:@"cityId"];
+        NSString *currentVersion = [dic objectForKey:@"currentVersion"];
+        NSArray *moduleNameArray = [dic objectForKey:@"failureModelName"];
+        [self.params setValue:cityId forKey:@"cityid"];
+        [self.params setValue:currentVersion forKey:@"version"];
+        for (NSString *moduleName in moduleNameArray) {
+            [self.params setValue:moduleName forKey:@"modelName"];
+            [self getConfigDataFromNetWork1];
+        }
+    }
+    self.retrieveData = YES;
 }
 
 #pragma mark - Lazy

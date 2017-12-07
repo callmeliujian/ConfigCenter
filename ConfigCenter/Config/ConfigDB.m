@@ -16,9 +16,25 @@
 @property (nonatomic, strong) FMDatabase *configDB;
 
 /**
- 存放model的key
+ 该字典分为3种key-value
+ 1.key：cityid 存放获取数据失败的城市ID。
+ 2.key：version 配置的版本号。
+ 3.key：failureModelName，对应的value为failureModelName。
  */
-//@property (nonatomic, strong) NSMutableArray *modelKeyNameArray;
+@property (nonatomic, strong) NSMutableDictionary *failureMutableDic;
+/**
+ 如果某个model下的key、status、value有一个为nil或者为@""，则将model的modelName放入此数组
+ 最后通过按model获取数据的接口再次请求数据，只请求一次。
+ */
+@property (nonatomic, strong) NSMutableArray *failureModelName;
+/**
+ 当前的数据moduleData是否有无效的数据
+ */
+@property (nonatomic, assign) BOOL isFailureModel;
+/**
+ 返回的数据moduleData中是否存在无效数据
+ */
+@property (nonatomic, assign) BOOL isExistFailUreModel;
 
 @end
 
@@ -31,6 +47,16 @@
         instance = [[ConfigDB alloc] init];
     });
     return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.failureMutableDic = [NSMutableDictionary dictionary];
+        self.failureModelName = [NSMutableArray array];
+    }
+    return self;
 }
 
 - (BOOL)openDB {
@@ -54,9 +80,19 @@
     // 2.处理modules的数据
     [self hanldModules:[dic objectForKey:@"modules"]];
     
+    
+    
     // 3.创建config_metadata表 将metadataDic存入config_metadata表
     [self createTable:@"config_metadata"];
     [self insertMetadata:metadataDic withTableName:@"config_metadata"];
+    
+#warning failureMutableDic 数据清空
+    // 4.失败数据处理
+    if (self.isExistFailUreModel) {
+        if ([self.delegate respondsToSelector:@selector(getFailureData:)]) {
+            [self.delegate getFailureData:self.failureMutableDic];
+        }
+    }
 }
 
 /**
@@ -66,21 +102,33 @@
     if (![modulesArray isKindOfClass:[NSArray class]]) return;
     for (NSDictionary *moduleDic in modulesArray) {
         NSString *moduleName;
+        NSString *config_modelName;
         for (NSString *key in moduleDic) {
             id object = [moduleDic valueForKey:key];
             if ([object isKindOfClass:[NSString class]]) { // moduleName 加上前缀config_即为表名
-                moduleName = [@"config_" stringByAppendingString:object];
+                config_modelName = [@"config_" stringByAppendingString:object];
             } else if ([object isKindOfClass:[NSArray class]]) { // 处理moduleData
                 //[self handleModuleData:object withModuleName:moduleName];
                 // 1.创建表
-                [self createTable:moduleName];
+                [self createTable:config_modelName];
                 // 2.写入数据
                 for (NSDictionary *dic in object) {
-                    [self handleDataToDB:dic withTableName:moduleName];
+                    [self handleDataToDB:dic withTableName:config_modelName];
                 }
-                
+                // 3.是否有写入失败的数据
+                if (self.isFailureModel) {
+                    [self.failureModelName addObject:moduleName];
+                    self.isFailureModel = NO;
+                }
             }
         }
+    }
+    if (self.isExistFailUreModel) {
+        NSString *cityId = [self selectDataFromDB:@"cityId" withTableName:@"config_metadata"];
+        NSString *currentVersion = [self selectDataFromDB:@"currentVersion" withTableName:@"config_metadata"];
+        [self.failureMutableDic setObject:cityId forKey:@"cityId"];
+        [self.failureMutableDic setObject:currentVersion forKey:@"currentVersion"];
+        [self.failureMutableDic setObject:self.failureModelName forKey:@"failureModelName"];
     }
 }
 
@@ -97,7 +145,11 @@
     NSNumber *status = [dic objectForKey:@"status"];
     NSString *value = [dic objectForKey:@"value"];
     
-    if (key == nil || status == nil || value == nil) return;
+    if (key == nil || status == nil || value == nil) {
+        self.isFailureModel = YES;
+        self.isExistFailUreModel = YES;
+        return;
+    }
     
     if ([status intValue] == 1) { // status = 1 代表增加或修改
         [self insertDataToDBWithKey:key withValue:value withTableName:tableName];
