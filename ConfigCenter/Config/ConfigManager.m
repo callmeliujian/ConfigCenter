@@ -254,7 +254,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         [self analyticalData];
     } else {
         self.allData = nil;
-        //[[ConfigDB shareDB] hanldDataToDB:[NSDictionary dictionary] withModelKeyName:self.params[@"modelkeyname"]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"网络请求失败" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+            [alert show];
+        });
         NSLog(@"配置中心网络访问失败：%@",error);
     }
 }
