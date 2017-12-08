@@ -27,6 +27,7 @@
 		1D3041051FA30EF300A66629 /* ConfigDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3041041FA30EF300A66629 /* ConfigDataModel.m */; };
 		1D3041081FA30FAC00A66629 /* ConfigUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3041071FA30FAC00A66629 /* ConfigUtils.m */; };
 		1D30410B1FA32E6C00A66629 /* ConfigVersionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D30410A1FA32E6C00A66629 /* ConfigVersionModel.m */; };
+		1D6D98CA1FDA79B800BB3B18 /* NSString+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */; };
 		1DC895541FB00BCE006B178B /* LJConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC895531FB00BCE006B178B /* LJConfigManager.m */; };
 		1DC8957B1FB1B114006B178B /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8957A1FB1B114006B178B /* test.m */; };
 		8232781E9F25D617E16CCD31 /* Pods_ConfigCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56B800F8A9832F18DA7D33DE /* Pods_ConfigCenter.framework */; };
@@ -73,6 +74,8 @@
 		1D3041071FA30FAC00A66629 /* ConfigUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigUtils.m; sourceTree = "<group>"; };
 		1D3041091FA32E6C00A66629 /* ConfigVersionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigVersionModel.h; sourceTree = "<group>"; };
 		1D30410A1FA32E6C00A66629 /* ConfigVersionModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigVersionModel.m; sourceTree = "<group>"; };
+		1D6D98C81FDA79B800BB3B18 /* NSString+Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Utils.h"; sourceTree = "<group>"; };
+		1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Utils.m"; sourceTree = "<group>"; };
 		1DC895521FB00BCE006B178B /* LJConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LJConfigManager.h; sourceTree = "<group>"; };
 		1DC895531FB00BCE006B178B /* LJConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LJConfigManager.m; sourceTree = "<group>"; };
 		1DC895561FB00C61006B178B /* ConfigDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigDelegate.h; sourceTree = "<group>"; };
@@ -152,6 +155,7 @@
 		1D3040F91FA2CF7700A66629 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1D6D98C71FDA799400BB3B18 /* Utils */,
 				1D3040FD1FA2D3C800A66629 /* ConfigManager.h */,
 				1D3040FE1FA2D3C800A66629 /* ConfigManager.m */,
 				1D3041001FA3063800A66629 /* ConfigAdaptor.h */,
@@ -168,6 +172,15 @@
 				1D04998C1FB3F69C0048CDEA /* ConfigDB.m */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		1D6D98C71FDA799400BB3B18 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1D6D98C81FDA79B800BB3B18 /* NSString+Utils.h */,
+				1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		399EAA9134BA7EE44E63045A /* Pods */ = {
@@ -316,6 +329,7 @@
 				1D076ABB1FD578C700F4E985 /* CCAppleDelegate.m in Sources */,
 				1D04998A1FB337CC0048CDEA /* test3.m in Sources */,
 				1D076AC11FD57BD700F4E985 /* CCExampleViewController.m in Sources */,
+				1D6D98CA1FDA79B800BB3B18 /* NSString+Utils.m in Sources */,
 				1D3041081FA30FAC00A66629 /* ConfigUtils.m in Sources */,
 				1D3040E81FA2CB4100A66629 /* ViewController.m in Sources */,
 				1DC895541FB00BCE006B178B /* LJConfigManager.m in Sources */,

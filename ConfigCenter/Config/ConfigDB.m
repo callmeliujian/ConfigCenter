@@ -10,6 +10,7 @@
 #import "ConfigDB.h"
 #import "FMDatabase.h"
 #import "ConfigManager.h"
+#import "NSString+Utils.h"
 
 @interface ConfigDB ()
 
@@ -91,6 +92,7 @@
     if (self.isExistFailUreModel) {
         if ([self.delegate respondsToSelector:@selector(getFailureData:)]) {
             [self.delegate getFailureData:self.failureMutableDic];
+            self.isExistFailUreModel = NO;
         }
     }
 }
@@ -106,6 +108,7 @@
         for (NSString *key in moduleDic) {
             id object = [moduleDic valueForKey:key];
             if ([object isKindOfClass:[NSString class]]) { // moduleName 加上前缀config_即为表名
+                moduleName = object;
                 config_modelName = [@"config_" stringByAppendingString:object];
             } else if ([object isKindOfClass:[NSArray class]]) { // 处理moduleData
                 //[self handleModuleData:object withModuleName:moduleName];
@@ -125,7 +128,13 @@
     }
     if (self.isExistFailUreModel) {
         NSString *cityId = [self selectDataFromDB:@"cityId" withTableName:@"config_metadata"];
+        if ([NSString isEmptyString:cityId]) {
+            cityId = [[ConfigManager shareInstance].params objectForKey:@"cityid"];
+        }
         NSString *currentVersion = [self selectDataFromDB:@"currentVersion" withTableName:@"config_metadata"];
+        if ([NSString isEmptyString:currentVersion]) {
+            currentVersion = [[ConfigManager shareInstance].params objectForKey:@"version"];
+        }
         [self.failureMutableDic setObject:cityId forKey:@"cityId"];
         [self.failureMutableDic setObject:currentVersion forKey:@"currentVersion"];
         [self.failureMutableDic setObject:self.failureModelName forKey:@"failureModelName"];
@@ -145,7 +154,7 @@
     NSNumber *status = [dic objectForKey:@"status"];
     NSString *value = [dic objectForKey:@"value"];
     
-    if (key == nil || status == nil || value == nil) {
+    if ([NSString isEmptyString:key] || status == nil || [NSString isEmptyString:value]) {
         self.isFailureModel = YES;
         self.isExistFailUreModel = YES;
         return;
@@ -350,7 +359,6 @@
 - (FMDatabase *)configDB {
     if (!_configDB) {
         NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        //NSString *dbNamePath = [[ConfigManager shareInstance].params objectForKey:@"dbNamePath"];
         NSString *dbNamePath = @"test.db";
         NSString *dbPath = [NSString stringWithFormat:@"%@/%@", path, [dbNamePath lastPathComponent]];
         NSString *filePath = [[NSBundle mainBundle] resourcePath];

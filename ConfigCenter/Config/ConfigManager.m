@@ -110,7 +110,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 /**
  解析数据
  */
-- (void)analyticalData {
+- (void)analyticalDataWithtask:(NSURLSessionTask *)task {
     if (self.allData == nil) return;
     
     NSString *str = [[NSString alloc] initWithData:self.allData encoding:NSUTF8StringEncoding];
@@ -127,7 +127,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     
     if ([[responseDic valueForKey:@"code"] integerValue] == 0) { //请求成功
         CONFIG_ACTION actionInt = [responseDic[@"data"][@"action"] intValue];
-    
+        if (![self checkCityID:responseDic[@"data"]]) {
+            [task resume];
+            return;
+        }
         if (actionInt == ACTION_NOCHANGE) { // 没有更新
             if ([self.delegate respondsToSelector:@selector(congfigNoChange)])
                 [self.delegate congfigNoChange];
@@ -155,6 +158,16 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self.delegate failureNetWork:responseDic];
         }
     }
+}
+
+/**校验cityid是否正确 */
+- (BOOL)checkCityID:(NSDictionary *)dic {
+    NSString *cityID = [dic objectForKey:@"cityId"];
+    BOOL isCityCorrect = false;
+    if ([cityID isEqualToString:self.params[@"cityid"]]) {
+        isCityCorrect = true;
+    }
+    return isCityCorrect;
 }
 
 /**
@@ -251,7 +264,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error == nil) {
-        [self analyticalData];
+        [self analyticalDataWithtask:task];
     } else {
         self.allData = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -274,7 +287,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (void) getFailureData:(NSDictionary *)dic {
-    if (self.retrieveData) {
+    if (!self.retrieveData) {
         NSString *cityId = [dic objectForKey:@"cityId"];
         NSString *currentVersion = [dic objectForKey:@"currentVersion"];
         NSArray *moduleNameArray = [dic objectForKey:@"failureModelName"];
