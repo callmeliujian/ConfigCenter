@@ -28,6 +28,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  是否重新获取过数据
  */
 @property (nonatomic, assign) BOOL retrieveData;
+/**
+ 是否根据model获取数据
+ */
+@property (nonatomic, assign) BOOL isGetDataFromModel;
 
 @property (nonatomic, strong) NSMutableArray *delegates;
 
@@ -95,6 +99,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (void)getConfigDataFromNetWork1 {
+    self.isGetDataFromModel = YES;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
     NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getmoduledetail?app=%@&platform=%@&appversion=%@&cityid=%@&module=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"modelName"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
     NSString *test = @"http://mockhttp.cn/mock/suyun/123";
@@ -130,6 +135,13 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         if (![self checkCityID:responseDic[@"data"]]) {
             [task resume];
             return;
+        }
+        if (self.isGetDataFromModel) {
+            if (![self checkModelName:responseDic[@"data"]]) {
+                [task resume];
+                return;
+            }
+            self.isGetDataFromModel = NO;
         }
         if (actionInt == ACTION_NOCHANGE) { // 没有更新
             if ([self.delegate respondsToSelector:@selector(congfigNoChange)])
@@ -168,6 +180,17 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         isCityCorrect = true;
     }
     return isCityCorrect;
+}
+
+- (BOOL)checkModelName:(NSDictionary *)dic {
+    NSArray *modeulesArray = [dic objectForKey:@"modules"];
+    NSDictionary *moduleDic = [modeulesArray firstObject];
+    NSString *modelName = [moduleDic objectForKey:@"moduleName"];
+    BOOL isModuleNameCorrect = false;
+    if ([modelName isEqualToString:self.params[@"modelName"]]) {
+        isModuleNameCorrect = true;
+    }
+    return isModuleNameCorrect;
 }
 
 /**
