@@ -87,11 +87,12 @@
     [self createTable:@"config_metadata"];
     [self insertMetadata:metadataDic withTableName:@"config_metadata"];
     
-#warning failureMutableDic 数据清空
     // 4.失败数据处理
     if (self.isExistFailUreModel) {
         if ([self.delegate respondsToSelector:@selector(getFailureData:)]) {
-            [self.delegate getFailureData:self.failureMutableDic];
+            [self.delegate getFailureData:[self.failureMutableDic mutableCopy]];
+            [self.failureMutableDic removeAllObjects];
+            [self.failureModelName removeAllObjects];
             self.isExistFailUreModel = NO;
         }
     }
