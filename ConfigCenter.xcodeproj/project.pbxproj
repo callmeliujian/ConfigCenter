@@ -18,6 +18,7 @@
 		1D17F6331FD79E6F00BE2A73 /* CCPicekerViewDataSoure.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D17F6321FD79E6F00BE2A73 /* CCPicekerViewDataSoure.m */; };
 		1D1DB3431FD58131008E8E3C /* CCAllDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D1DB3421FD58131008E8E3C /* CCAllDataView.m */; };
 		1D1DB3461FD5816F008E8E3C /* CCModelDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D1DB3451FD5816F008E8E3C /* CCModelDataView.m */; };
+		1D28BD231FDC196F003E76BD /* ConfigCenterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D28BD221FDC196F003E76BD /* ConfigCenterTests.m */; };
 		1D3040E81FA2CB4100A66629 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3040E71FA2CB4100A66629 /* ViewController.m */; };
 		1D3040ED1FA2CB4100A66629 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D3040EC1FA2CB4100A66629 /* Assets.xcassets */; };
 		1D3040F01FA2CB4100A66629 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D3040EE1FA2CB4100A66629 /* LaunchScreen.storyboard */; };
@@ -32,6 +33,16 @@
 		1DC8957B1FB1B114006B178B /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8957A1FB1B114006B178B /* test.m */; };
 		8232781E9F25D617E16CCD31 /* Pods_ConfigCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56B800F8A9832F18DA7D33DE /* Pods_ConfigCenter.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1D28BD251FDC196F003E76BD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1D3040D81FA2CB4000A66629 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D3040DF1FA2CB4100A66629;
+			remoteInfo = ConfigCenter;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		02ABEB7891D475E9DEBD7076 /* Pods-ConfigCenter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConfigCenter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ConfigCenter/Pods-ConfigCenter.debug.xcconfig"; sourceTree = "<group>"; };
@@ -57,6 +68,9 @@
 		1D1DB3421FD58131008E8E3C /* CCAllDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAllDataView.m; sourceTree = "<group>"; };
 		1D1DB3441FD5816F008E8E3C /* CCModelDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCModelDataView.h; sourceTree = "<group>"; };
 		1D1DB3451FD5816F008E8E3C /* CCModelDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCModelDataView.m; sourceTree = "<group>"; };
+		1D28BD201FDC196F003E76BD /* ConfigCenterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConfigCenterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D28BD221FDC196F003E76BD /* ConfigCenterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigCenterTests.m; sourceTree = "<group>"; };
+		1D28BD241FDC196F003E76BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D3040E01FA2CB4100A66629 /* ConfigCenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConfigCenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D3040E61FA2CB4100A66629 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		1D3040E71FA2CB4100A66629 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -86,6 +100,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1D28BD1D1FDC196F003E76BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D3040DD1FA2CB4100A66629 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,10 +118,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D28BD211FDC196F003E76BD /* ConfigCenterTests */ = {
+			isa = PBXGroup;
+			children = (
+				1D28BD221FDC196F003E76BD /* ConfigCenterTests.m */,
+				1D28BD241FDC196F003E76BD /* Info.plist */,
+			);
+			path = ConfigCenterTests;
+			sourceTree = "<group>";
+		};
 		1D3040D71FA2CB4000A66629 = {
 			isa = PBXGroup;
 			children = (
 				1D3040E21FA2CB4100A66629 /* ConfigCenter */,
+				1D28BD211FDC196F003E76BD /* ConfigCenterTests */,
 				1D3040E11FA2CB4100A66629 /* Products */,
 				399EAA9134BA7EE44E63045A /* Pods */,
 				CD2DE01C8558458DB4F5289D /* Frameworks */,
@@ -111,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				1D3040E01FA2CB4100A66629 /* ConfigCenter.app */,
+				1D28BD201FDC196F003E76BD /* ConfigCenterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,6 +235,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1D28BD1F1FDC196F003E76BD /* ConfigCenterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D28BD291FDC196F003E76BD /* Build configuration list for PBXNativeTarget "ConfigCenterTests" */;
+			buildPhases = (
+				1D28BD1C1FDC196F003E76BD /* Sources */,
+				1D28BD1D1FDC196F003E76BD /* Frameworks */,
+				1D28BD1E1FDC196F003E76BD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1D28BD261FDC196F003E76BD /* PBXTargetDependency */,
+			);
+			name = ConfigCenterTests;
+			productName = ConfigCenterTests;
+			productReference = 1D28BD201FDC196F003E76BD /* ConfigCenterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		1D3040DF1FA2CB4100A66629 /* ConfigCenter */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D3040F61FA2CB4200A66629 /* Build configuration list for PBXNativeTarget "ConfigCenter" */;
@@ -232,6 +282,11 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "刘健";
 				TargetAttributes = {
+					1D28BD1F1FDC196F003E76BD = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 1D3040DF1FA2CB4100A66629;
+					};
 					1D3040DF1FA2CB4100A66629 = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
@@ -252,11 +307,19 @@
 			projectRoot = "";
 			targets = (
 				1D3040DF1FA2CB4100A66629 /* ConfigCenter */,
+				1D28BD1F1FDC196F003E76BD /* ConfigCenterTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1D28BD1E1FDC196F003E76BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D3040DE1FA2CB4100A66629 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,6 +381,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1D28BD1C1FDC196F003E76BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D28BD231FDC196F003E76BD /* ConfigCenterTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D3040DC1FA2CB4100A66629 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -347,6 +418,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1D28BD261FDC196F003E76BD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D3040DF1FA2CB4100A66629 /* ConfigCenter */;
+			targetProxy = 1D28BD251FDC196F003E76BD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		1D3040EE1FA2CB4100A66629 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -359,6 +438,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1D28BD271FDC196F003E76BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYNJQ6CWNM;
+				INFOPLIST_FILE = ConfigCenterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "---------------.ConfigCenterTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ConfigCenter.app/ConfigCenter";
+			};
+			name = Debug;
+		};
+		1D28BD281FDC196F003E76BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYNJQ6CWNM;
+				INFOPLIST_FILE = ConfigCenterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "---------------.ConfigCenterTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ConfigCenter.app/ConfigCenter";
+			};
+			name = Release;
+		};
 		1D3040F41FA2CB4100A66629 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -498,6 +609,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1D28BD291FDC196F003E76BD /* Build configuration list for PBXNativeTarget "ConfigCenterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D28BD271FDC196F003E76BD /* Debug */,
+				1D28BD281FDC196F003E76BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1D3040DB1FA2CB4100A66629 /* Build configuration list for PBXProject "ConfigCenter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
