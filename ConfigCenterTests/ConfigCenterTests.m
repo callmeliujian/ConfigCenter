@@ -31,6 +31,7 @@
 
 - (void)testExample {
     [self test_shareInstance];
+    [self test_getConfigVersion];
 }
 
 - (void)testPerformanceExample {
@@ -42,6 +43,10 @@
 
 - (void)test_shareInstance {
     XCTAssertEqualObjects(self.configManager, [ConfigManager shareInstance], @"shareInstance通过单元测试");
+}
+
+- (void)test_getConfigVersion {
+    XCTAssertNotNil([self.configManager getConfigVersion], @"getConfigVersion通过单元测试");
 }
 
 @end
