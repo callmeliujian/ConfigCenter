@@ -33,8 +33,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  */
 @property (nonatomic, assign) BOOL isGetDataFromModel;
 
-@property (nonatomic, strong) NSMutableArray *delegates;
-
 @property (nonatomic, strong) NSDictionary *allConfig;
 
 @property (nonatomic, strong) NSDictionary *versionConfig;
@@ -65,44 +63,28 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 - (void)setupParams:(NSDictionary *)params {
     self.params = params;
-    self.delegates = [[NSMutableArray alloc] init];
-    [self creatAdaptor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
     if (self.isGetModelData) {
         [self getConfigDataFromNetWork1];
     } else {
         [self getConfigDataFromNetWork];
     }
-    
-}
-
-- (void)addDelegate:(id<ConfigDelegate>)delegate {
-    [self.delegates addObject:delegate];
-}
-
-- (void)removeDelegate:(id<ConfigDelegate>)delegate {
-    [self.delegates removeObject:delegate];
 }
 
 - (void)getConfigDataFromNetWork {
-    
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
     NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getall?app=%@&platform=%@&appversion=%@&cityid=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
-    NSString *test = @"http://mockhttp.cn/mock/suyun/123";
     NSLog(@"-------------ConfigCenter发送的请求地址为-----------------");
     NSLog(@"%@",stringURL);
     NSLog(@"-------------------------------------------------------");
     NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:stringURL]]];
-    
     [task resume];
-
 }
 
 - (void)getConfigDataFromNetWork1 {
     self.isGetDataFromModel = YES;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
     NSString *stringURL = [NSString stringWithFormat:@"http://%@/api/getmoduledetail?app=%@&platform=%@&appversion=%@&cityid=%@&module=%@&version=%@&encryptid=%@&time=%@&encryptRes=%@",[self.params objectForKey:@"URL"], [self.params valueForKey:@"app"], [self.params valueForKey:@"platform"], [self.params valueForKey:@"appversion"], [self.params valueForKey:@"cityid"], [self.params valueForKey:@"modelName"], [self.params valueForKey:@"version"], [self.params valueForKey:@"encryptid"], [self.params valueForKey:@"time"], [self.params valueForKey:@"res"]];
-    NSString *test = @"http://mockhttp.cn/mock/suyun/123";
     NSLog(@"-------------ConfigCenter发送的请求地址为-----------------");
     NSLog(@"%@",stringURL);
     NSLog(@"-------------------------------------------------------");
@@ -117,11 +99,8 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  */
 - (void)analyticalDataWithtask:(NSURLSessionTask *)task {
     if (self.allData == nil) return;
-    
     NSString *str = [[NSString alloc] initWithData:self.allData encoding:NSUTF8StringEncoding];
-    
     NSLog(@"%@",str);
-    
     NSError *error = nil;
     NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:self.allData options:NSJSONReadingMutableLeaves error:&error];
     self.allData = nil;
@@ -129,7 +108,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         NSLog(@"配置中心解析数据出错“%@",error);
         return;
     }
-    
     if ([[responseDic valueForKey:@"code"] integerValue] == 0) { //请求成功
         CONFIG_ACTION actionInt = [responseDic[@"data"][@"action"] intValue];
         if (![self checkCityID:responseDic[@"data"]]) {
@@ -165,7 +143,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"配置中心配置请求失败" message:[responseDic valueForKey:@"codeMsg"] delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
                     [alert show];
         });
-
         if ([self.delegate respondsToSelector:@selector(failureNetWork:)]) {
             [self.delegate failureNetWork:responseDic];
         }
@@ -191,13 +168,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         isModuleNameCorrect = true;
     }
     return isModuleNameCorrect;
-}
-
-/**
- 将配置中心数据反序列化到内存
- */
-- (void)deserializeToMemory:(NSDictionary *)dic {
-    [self.adaptor updateData:dic[@"data"]];
 }
 
 /**
@@ -245,31 +215,14 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         [[NSFileManager defaultManager] removeItemAtPath:sourcePath error:nil];
         return;
     }
-    //[[ConfigDB shareDB] deleteTable:nil];
 }
 
 - (void)cityChanged:(NSString *)cityid {
     [self deleteOldDB];
 }
 
--(void)registerWithKey:(NSString *)key modelClassName:(NSString *)className {
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    [dic setValue:key forKey:@"key"];
-    [dic setValue:className forKey:@"className"];
-    [self.classNameArray addObject:dic];
-}
-
-- (void)registerClassName
-{
-    for (NSDictionary *dic in self.classNameArray) {
-        [_adaptor registerModelWithKey:dic[@"key"] modelClassName:dic[@"className"]];
-    }
-}
-
 - (NSArray *)getAllConfigCenterTableName {
-    //if (!_tableNameArray) {
-        _tableNameArray = [[ConfigDB shareDB] recriveAllTbaleName];;
-    //}
+    _tableNameArray = [[ConfigDB shareDB] recriveAllTbaleName];;
     return _tableNameArray;
 }
 
@@ -305,10 +258,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 
 #pragma mark - ConfigDBDelegate
 
-- (void) dataFromDBToMemory:(NSDictionary *)dic {
-    [self deserializeToMemory:dic];
-}
-
 - (void) getFailureData:(NSDictionary *)dic {
     if (!self.retrieveData) {
         NSString *cityId = [dic objectForKey:@"cityId"];
@@ -331,18 +280,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         _allData = [[NSMutableData alloc] init];
     }
     return _allData;
-}
-
-- (ConfigAdaptor *)adaptor {
-    if (!_adaptor) {
-        [self creatAdaptor];
-    }
-    return _adaptor;
-}
-
-- (void)creatAdaptor {
-    _adaptor = [[ConfigAdaptor alloc] init];
-    [self registerClassName];
 }
 
 - (NSMutableArray *)classNameArray {

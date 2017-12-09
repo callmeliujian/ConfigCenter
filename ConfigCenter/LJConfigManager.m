@@ -30,8 +30,6 @@
 }
 
 - (void)createManager {
-    // 注册key关联的model类名称
-    [self ConfigRegister];
     if (self.isDeleteBD){
         [[ConfigManager shareInstance] deleteOldDB];
         self.isDeleteBD = NO;
@@ -58,16 +56,6 @@
     [configParam setObject:[self.param objectForKey:@"modelName"] forKey:@"modelName"];
     [ConfigManager shareInstance].isGetModelData = self.isGetModelData;
     [[ConfigManager shareInstance] setupParams:configParam];
-    [[ConfigManager shareInstance] addDelegate:self];
-}
-
-/**
- 注册关联类
- */
-- (void)ConfigRegister {
-    [[ConfigManager shareInstance] registerWithKey:self.keyArray[0] modelClassName:@"test1"];
-    [[ConfigManager shareInstance] registerWithKey:self.keyArray[1] modelClassName:@"test2"];
-    [[ConfigManager shareInstance] registerWithKey:self.keyArray[2] modelClassName:@"test3"];
 }
 
 - (NSArray *)allTableNames {

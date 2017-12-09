@@ -12,13 +12,18 @@
 @protocol ConfigManagerDelegate <NSObject>
 
 @optional
-//增量更新
+/**
+ 增量更新
+ */
 - (void) partKeysChange;
-//全量更新
+/**
+ 全量更新
+ */
 - (void) allKeysChange;
-//没有数据更新
+/**
+ 没有数据更新
+ */
 - (void) congfigNoChange;
-
 /**
  网络问题，没有获取到数据
  */
@@ -28,7 +33,6 @@
 @interface ConfigManager : NSObject
 
 @property (nonatomic, strong) NSString *cityid;
-@property (nonatomic, strong) ConfigAdaptor *adaptor;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, assign) id<ConfigManagerDelegate> delegate;
 /**
@@ -42,24 +46,7 @@
 - (void)setupParams:(NSDictionary *)params;
 - (NSString *)getConfigVersion;
 - (void)deleteOldDB;
-
-- (void)addDelegate:(id<ConfigManagerDelegate>)delegate;
-- (void)removeDelegate:(id<ConfigManagerDelegate>)delegate;
-
 - (void)getConfigDataFromNetWork;
-- (void)getVersionConfigFromDB:(NSString *)cityid;
-
-- (NSString *)getUserGroupFromAdaptor;
-- (NSString *)getActionFromAdaptor;
-- (void)setAdaptorVersion:(NSString *)version;
-
-//主动更新
-- (NSDictionary *)getAllConfig;
-- (NSDictionary *)getVersionConfig;
-
--(void)registerWithKey:(NSString *)key modelClassName:(NSString *)className;
-- (id)getDataWithKey:(NSString *)key;
-- (id)getArrayDataWithKey:(NSString *)key;
 
 /**
  城市变化
