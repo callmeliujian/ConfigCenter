@@ -13,6 +13,7 @@
 - (void)deserialize:(NSArray *)map {
     
     for (NSDictionary *dic in map) {
+        
         NSLog(@"%@",dic);
     }
     
