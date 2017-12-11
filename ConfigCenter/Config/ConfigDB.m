@@ -244,15 +244,19 @@
 }
 
 - (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName {
-    if (![key isKindOfClass:[NSString class]] || tableName == nil || [tableName isEqualToString:@""] || [key  isEqual: @""]) return @"";
+    if ([NSString isEmptyString:key] || [NSString isEmptyString:tableName] || ![key isKindOfClass:[NSString class]] || ![tableName isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    
     NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
+    NSString *value = nil;
     [[ConfigDB shareDB] openDB];
     FMResultSet *result = [self.configDB executeQuery:sql];
     while ([result next]) {
-        return [result stringForColumn:@"value"];
+        value = [result stringForColumn:@"value"];
     }
     [[ConfigDB shareDB] closeDB];
-    return @"";
+    return value;
 }
 
 - (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName {
