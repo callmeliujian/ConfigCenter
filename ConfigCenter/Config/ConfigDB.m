@@ -262,7 +262,7 @@
 }
 
 - (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName {
-    if ([tableName isEqualToString:@""] || ![tableName isKindOfClass:[NSString class]]) return nil;
+    if ([NSString isEmptyString:tableName] || ![tableName isKindOfClass:[NSString class]]) return nil;
     [[ConfigDB shareDB] openDB];
     NSMutableArray *mutableArr = [NSMutableArray array];
     NSString *sql = [NSString stringWithFormat:@"select * from %@",tableName];
