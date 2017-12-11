@@ -209,7 +209,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (NSArray *)getAllConfigCenterTableName {
-    _tableNameArray = [[ConfigDB shareDB] recriveAllTbaleName];;
+    _tableNameArray = [[ConfigDB shareDB] getAllTbaleName];;
     return _tableNameArray;
 }
 

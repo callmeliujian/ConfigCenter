@@ -29,7 +29,7 @@
  */
 - (void)hanldDataToDB:(NSDictionary *)dic;
 
-- (NSArray *)recriveAllTbaleName;
+- (NSArray *)getAllTbaleName;
 /**
  获取tableName里所有数据
  */

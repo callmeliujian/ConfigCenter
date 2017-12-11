@@ -275,7 +275,7 @@
     return mutableArr;
 }
 
-- (NSArray *)recriveAllTbaleName {
+- (NSArray *)getAllTbaleName {
     [[ConfigDB shareDB] openDB];
     NSString *sql = @"SELECT * FROM sqlite_master where type='table';";
     FMResultSet *result = [self.configDB executeQuery:sql];
