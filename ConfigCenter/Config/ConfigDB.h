@@ -29,11 +29,6 @@
  */
 - (void)hanldDataToDB:(NSDictionary *)dic;
 
-/**
- 原数据写入数据库
- */
-- (BOOL)metaDataToDB:(NSDictionary *)dic;
-
 - (NSArray *)recriveAllTbaleName;
 /**
  获取tableName里所有数据

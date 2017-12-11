@@ -193,23 +193,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 /**
- 将元数据写入数据库
- 元数据：城市ID、配置中心版本号等
- */
-- (void)writeMetadataToDB:(NSDictionary *)dict {
-    // 1.将元数据从字典中取出来，并组成一个新的元数据字典
-    NSDictionary *tmpDict = [dict valueForKey:@"data"];
-    NSMutableDictionary *metaDataMutableDict = [NSMutableDictionary dictionary];
-    for (NSString *key in tmpDict.allKeys) {
-        if (![key isEqualToString:@"modules"] && ![key isEqualToString:@"action"]) {
-            [metaDataMutableDict setObject:[tmpDict objectForKey:key] forKey:key];
-        }
-    }
-    // 2.将元数据字典写入数据库
-    [[ConfigDB shareDB] metaDataToDB:metaDataMutableDict];
-}
-
-/**
  删除老版本数据库
  */
 - (void)deleteOldDB {

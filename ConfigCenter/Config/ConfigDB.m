@@ -81,8 +81,6 @@
     // 2.处理modules的数据
     [self hanldModules:[dic objectForKey:@"modules"]];
     
-    
-    
     // 3.创建config_metadata表 将metadataDic存入config_metadata表
     [self createTable:@"config_metadata"];
     [self insertMetadata:metadataDic withTableName:@"config_metadata"];
