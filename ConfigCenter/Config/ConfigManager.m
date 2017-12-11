@@ -131,11 +131,13 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         if (actionInt == ACTION_NOCHANGE) { // 没有更新
             if ([self.delegate respondsToSelector:@selector(congfigNoChange)])
                 [self.delegate congfigNoChange];
+            self.isGetDataFromModel = NO;
         } else if (actionInt == ACTION_APPEND) { //增量更新
             // 将数据缓存到数据库
             [self storageDataToDB:responseDic[@"data"]];
             if ([self.delegate respondsToSelector:@selector(partKeysChange)])
                 [self.delegate partKeysChange];
+            self.isGetDataFromModel = NO;
         } else if (actionInt == ACTION_FULL) { //全量更新
             // 删除旧数据库、将数据缓存到新数据库
             if (!self.isGetDataFromModel) {
