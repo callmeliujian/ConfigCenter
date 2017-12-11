@@ -8,8 +8,6 @@
 
 #import "ConfigManager.h"
 #import <UIKit/UIKit.h>
-#import "ConfigDelegate.h"
-#import "ConfigAdaptor.h"
 #import "ConfigDB.h"
 
 typedef NS_ENUM(int, CONFIG_ACTION)

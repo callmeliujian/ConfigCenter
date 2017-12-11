@@ -26,6 +26,7 @@
 
 - (void)tearDown {
     self.configManager = nil;
+    
     [super tearDown];
 }
 

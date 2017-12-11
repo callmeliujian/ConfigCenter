@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D0499841FB337AD0048CDEA /* test1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0499831FB337AD0048CDEA /* test1.m */; };
-		1D0499871FB337C00048CDEA /* test2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0499861FB337C00048CDEA /* test2.m */; };
-		1D04998A1FB337CC0048CDEA /* test3.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0499891FB337CC0048CDEA /* test3.m */; };
 		1D04998D1FB3F69C0048CDEA /* ConfigDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D04998C1FB3F69C0048CDEA /* ConfigDB.m */; };
 		1D076ABB1FD578C700F4E985 /* CCAppleDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D076ABA1FD578C700F4E985 /* CCAppleDelegate.m */; };
 		1D076ABE1FD579E300F4E985 /* CCExampleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D076ABD1FD579E300F4E985 /* CCExampleListViewController.m */; };
@@ -19,18 +16,13 @@
 		1D1DB3431FD58131008E8E3C /* CCAllDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D1DB3421FD58131008E8E3C /* CCAllDataView.m */; };
 		1D1DB3461FD5816F008E8E3C /* CCModelDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D1DB3451FD5816F008E8E3C /* CCModelDataView.m */; };
 		1D28BD231FDC196F003E76BD /* ConfigCenterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D28BD221FDC196F003E76BD /* ConfigCenterTests.m */; };
-		1D3040E81FA2CB4100A66629 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3040E71FA2CB4100A66629 /* ViewController.m */; };
+		1D28BD2C1FDC1EE2003E76BD /* LJConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D28BD2A1FDC1EE2003E76BD /* LJConfigManager.m */; };
 		1D3040ED1FA2CB4100A66629 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D3040EC1FA2CB4100A66629 /* Assets.xcassets */; };
 		1D3040F01FA2CB4100A66629 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D3040EE1FA2CB4100A66629 /* LaunchScreen.storyboard */; };
 		1D3040F31FA2CB4100A66629 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3040F21FA2CB4100A66629 /* main.m */; };
 		1D3040FF1FA2D3C800A66629 /* ConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3040FE1FA2D3C800A66629 /* ConfigManager.m */; };
-		1D3041021FA3063800A66629 /* ConfigAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3041011FA3063800A66629 /* ConfigAdaptor.m */; };
-		1D3041051FA30EF300A66629 /* ConfigDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3041041FA30EF300A66629 /* ConfigDataModel.m */; };
 		1D3041081FA30FAC00A66629 /* ConfigUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3041071FA30FAC00A66629 /* ConfigUtils.m */; };
-		1D30410B1FA32E6C00A66629 /* ConfigVersionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D30410A1FA32E6C00A66629 /* ConfigVersionModel.m */; };
 		1D6D98CA1FDA79B800BB3B18 /* NSString+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */; };
-		1DC895541FB00BCE006B178B /* LJConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC895531FB00BCE006B178B /* LJConfigManager.m */; };
-		1DC8957B1FB1B114006B178B /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8957A1FB1B114006B178B /* test.m */; };
 		8232781E9F25D617E16CCD31 /* Pods_ConfigCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56B800F8A9832F18DA7D33DE /* Pods_ConfigCenter.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,13 +38,6 @@
 
 /* Begin PBXFileReference section */
 		02ABEB7891D475E9DEBD7076 /* Pods-ConfigCenter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConfigCenter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ConfigCenter/Pods-ConfigCenter.debug.xcconfig"; sourceTree = "<group>"; };
-		1D0499811FB310D30048CDEA /* Serializable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Serializable.h; sourceTree = "<group>"; };
-		1D0499821FB337AD0048CDEA /* test1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test1.h; sourceTree = "<group>"; };
-		1D0499831FB337AD0048CDEA /* test1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test1.m; sourceTree = "<group>"; };
-		1D0499851FB337C00048CDEA /* test2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test2.h; sourceTree = "<group>"; };
-		1D0499861FB337C00048CDEA /* test2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test2.m; sourceTree = "<group>"; };
-		1D0499881FB337CC0048CDEA /* test3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test3.h; sourceTree = "<group>"; };
-		1D0499891FB337CC0048CDEA /* test3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test3.m; sourceTree = "<group>"; };
 		1D04998B1FB3F69C0048CDEA /* ConfigDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigDB.h; sourceTree = "<group>"; };
 		1D04998C1FB3F69C0048CDEA /* ConfigDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigDB.m; sourceTree = "<group>"; };
 		1D076AB91FD578C700F4E985 /* CCAppleDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCAppleDelegate.h; sourceTree = "<group>"; };
@@ -71,30 +56,19 @@
 		1D28BD201FDC196F003E76BD /* ConfigCenterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConfigCenterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D28BD221FDC196F003E76BD /* ConfigCenterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigCenterTests.m; sourceTree = "<group>"; };
 		1D28BD241FDC196F003E76BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1D28BD2A1FDC1EE2003E76BD /* LJConfigManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJConfigManager.m; sourceTree = "<group>"; };
+		1D28BD2B1FDC1EE2003E76BD /* LJConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJConfigManager.h; sourceTree = "<group>"; };
 		1D3040E01FA2CB4100A66629 /* ConfigCenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConfigCenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1D3040E61FA2CB4100A66629 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1D3040E71FA2CB4100A66629 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		1D3040EC1FA2CB4100A66629 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D3040EF1FA2CB4100A66629 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1D3040F11FA2CB4100A66629 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D3040F21FA2CB4100A66629 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1D3040FD1FA2D3C800A66629 /* ConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigManager.h; sourceTree = "<group>"; };
 		1D3040FE1FA2D3C800A66629 /* ConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigManager.m; sourceTree = "<group>"; };
-		1D3041001FA3063800A66629 /* ConfigAdaptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigAdaptor.h; sourceTree = "<group>"; };
-		1D3041011FA3063800A66629 /* ConfigAdaptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigAdaptor.m; sourceTree = "<group>"; };
-		1D3041031FA30EF300A66629 /* ConfigDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigDataModel.h; sourceTree = "<group>"; };
-		1D3041041FA30EF300A66629 /* ConfigDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigDataModel.m; sourceTree = "<group>"; };
 		1D3041061FA30FAC00A66629 /* ConfigUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigUtils.h; sourceTree = "<group>"; };
 		1D3041071FA30FAC00A66629 /* ConfigUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigUtils.m; sourceTree = "<group>"; };
-		1D3041091FA32E6C00A66629 /* ConfigVersionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigVersionModel.h; sourceTree = "<group>"; };
-		1D30410A1FA32E6C00A66629 /* ConfigVersionModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigVersionModel.m; sourceTree = "<group>"; };
 		1D6D98C81FDA79B800BB3B18 /* NSString+Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Utils.h"; sourceTree = "<group>"; };
 		1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Utils.m"; sourceTree = "<group>"; };
-		1DC895521FB00BCE006B178B /* LJConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LJConfigManager.h; sourceTree = "<group>"; };
-		1DC895531FB00BCE006B178B /* LJConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LJConfigManager.m; sourceTree = "<group>"; };
-		1DC895561FB00C61006B178B /* ConfigDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigDelegate.h; sourceTree = "<group>"; };
-		1DC895791FB1B114006B178B /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
-		1DC8957A1FB1B114006B178B /* test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test.m; sourceTree = "<group>"; };
 		56B800F8A9832F18DA7D33DE /* Pods_ConfigCenter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ConfigCenter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5885028EC60541D8EDD9A5BB /* Pods-ConfigCenter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConfigCenter.release.xcconfig"; path = "Pods/Target Support Files/Pods-ConfigCenter/Pods-ConfigCenter.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,18 +136,8 @@
 				1D1DB3451FD5816F008E8E3C /* CCModelDataView.m */,
 				1D17F6311FD79E6F00BE2A73 /* CCPicekerViewDataSoure.h */,
 				1D17F6321FD79E6F00BE2A73 /* CCPicekerViewDataSoure.m */,
-				1D3040E61FA2CB4100A66629 /* ViewController.h */,
-				1D3040E71FA2CB4100A66629 /* ViewController.m */,
-				1DC895521FB00BCE006B178B /* LJConfigManager.h */,
-				1DC895531FB00BCE006B178B /* LJConfigManager.m */,
-				1DC895791FB1B114006B178B /* test.h */,
-				1DC8957A1FB1B114006B178B /* test.m */,
-				1D0499821FB337AD0048CDEA /* test1.h */,
-				1D0499831FB337AD0048CDEA /* test1.m */,
-				1D0499851FB337C00048CDEA /* test2.h */,
-				1D0499861FB337C00048CDEA /* test2.m */,
-				1D0499881FB337CC0048CDEA /* test3.h */,
-				1D0499891FB337CC0048CDEA /* test3.m */,
+				1D28BD2B1FDC1EE2003E76BD /* LJConfigManager.h */,
+				1D28BD2A1FDC1EE2003E76BD /* LJConfigManager.m */,
 				1D3040F91FA2CF7700A66629 /* Config */,
 				1D3040EC1FA2CB4100A66629 /* Assets.xcassets */,
 				1D08A9B51FD5836100764876 /* Main.storyboard */,
@@ -190,16 +154,6 @@
 				1D6D98C71FDA799400BB3B18 /* Utils */,
 				1D3040FD1FA2D3C800A66629 /* ConfigManager.h */,
 				1D3040FE1FA2D3C800A66629 /* ConfigManager.m */,
-				1D3041001FA3063800A66629 /* ConfigAdaptor.h */,
-				1D3041011FA3063800A66629 /* ConfigAdaptor.m */,
-				1D3041031FA30EF300A66629 /* ConfigDataModel.h */,
-				1D3041041FA30EF300A66629 /* ConfigDataModel.m */,
-				1D3041091FA32E6C00A66629 /* ConfigVersionModel.h */,
-				1D30410A1FA32E6C00A66629 /* ConfigVersionModel.m */,
-				1D3041061FA30FAC00A66629 /* ConfigUtils.h */,
-				1D3041071FA30FAC00A66629 /* ConfigUtils.m */,
-				1DC895561FB00C61006B178B /* ConfigDelegate.h */,
-				1D0499811FB310D30048CDEA /* Serializable.h */,
 				1D04998B1FB3F69C0048CDEA /* ConfigDB.h */,
 				1D04998C1FB3F69C0048CDEA /* ConfigDB.m */,
 			);
@@ -211,6 +165,8 @@
 			children = (
 				1D6D98C81FDA79B800BB3B18 /* NSString+Utils.h */,
 				1D6D98C91FDA79B800BB3B18 /* NSString+Utils.m */,
+				1D3041061FA30FAC00A66629 /* ConfigUtils.h */,
+				1D3041071FA30FAC00A66629 /* ConfigUtils.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -394,25 +350,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D1DB3431FD58131008E8E3C /* CCAllDataView.m in Sources */,
-				1D0499871FB337C00048CDEA /* test2.m in Sources */,
 				1D076ABE1FD579E300F4E985 /* CCExampleListViewController.m in Sources */,
 				1D04998D1FB3F69C0048CDEA /* ConfigDB.m in Sources */,
 				1D076ABB1FD578C700F4E985 /* CCAppleDelegate.m in Sources */,
-				1D04998A1FB337CC0048CDEA /* test3.m in Sources */,
 				1D076AC11FD57BD700F4E985 /* CCExampleViewController.m in Sources */,
 				1D6D98CA1FDA79B800BB3B18 /* NSString+Utils.m in Sources */,
 				1D3041081FA30FAC00A66629 /* ConfigUtils.m in Sources */,
-				1D3040E81FA2CB4100A66629 /* ViewController.m in Sources */,
-				1DC895541FB00BCE006B178B /* LJConfigManager.m in Sources */,
 				1D17F6331FD79E6F00BE2A73 /* CCPicekerViewDataSoure.m in Sources */,
 				1D3040F31FA2CB4100A66629 /* main.m in Sources */,
-				1D3041021FA3063800A66629 /* ConfigAdaptor.m in Sources */,
 				1D1DB3461FD5816F008E8E3C /* CCModelDataView.m in Sources */,
-				1DC8957B1FB1B114006B178B /* test.m in Sources */,
-				1D0499841FB337AD0048CDEA /* test1.m in Sources */,
-				1D30410B1FA32E6C00A66629 /* ConfigVersionModel.m in Sources */,
 				1D3040FF1FA2D3C800A66629 /* ConfigManager.m in Sources */,
-				1D3041051FA30EF300A66629 /* ConfigDataModel.m in Sources */,
+				1D28BD2C1FDC1EE2003E76BD /* LJConfigManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +527,7 @@
 			baseConfigurationReference = 02ABEB7891D475E9DEBD7076 /* Pods-ConfigCenter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYNJQ6CWNM;
 				INFOPLIST_FILE = ConfigCenter/Info.plist;
@@ -586,6 +535,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "--------------.ConfigCenter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -595,6 +545,7 @@
 			baseConfigurationReference = 5885028EC60541D8EDD9A5BB /* Pods-ConfigCenter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYNJQ6CWNM;
 				INFOPLIST_FILE = ConfigCenter/Info.plist;
@@ -602,6 +553,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "--------------.ConfigCenter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

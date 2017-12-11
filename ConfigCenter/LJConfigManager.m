@@ -7,7 +7,6 @@
 //
 
 #import "LJConfigManager.h"
-#import "ConfigDelegate.h"
 #import "ConfigManager.h"
 #import "ConfigUtils.h"
 

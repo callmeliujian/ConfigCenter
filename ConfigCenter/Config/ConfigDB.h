@@ -9,10 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @protocol ConfigDBDelegate <NSObject>
-/**
- 将数据库中的数据加载到内存
- */
-- (void) dataFromDBToMemory:(NSDictionary *)dic;
 - (void) getFailureData:(NSDictionary *)dic;
 
 @end
