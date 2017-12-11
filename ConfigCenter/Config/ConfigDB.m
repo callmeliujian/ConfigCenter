@@ -251,28 +251,6 @@
     return;
 }
 
-/**
- 根据表名删除数据库里的表
-
- @param tableName 表名
- */
-- (void)deleteTable:(NSString *)tableName {
-    if (tableName == nil || [tableName isEqualToString:@""]) return;
-    [[ConfigDB shareDB] openDB];
-    NSString *sql = [NSString stringWithFormat:@"DROP TABLE %@", tableName];
-    BOOL success = [self.configDB executeUpdate:sql];
-    if (success) {
-        NSLog(@"删除表%@成功",tableName);
-    } else {
-        NSLog(@"删除表%@失败",tableName);
-    }
-    [[ConfigDB shareDB] closeDB];
-}
-
-- (void)deleteDB {
-    
-}
-
 - (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName {
     if (![key isKindOfClass:[NSString class]] || tableName == nil || [tableName isEqualToString:@""] || [key  isEqual: @""]) return @"";
     NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];

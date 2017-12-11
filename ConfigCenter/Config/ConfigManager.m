@@ -193,15 +193,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 /**
- 全量更新时候使用
- 所有数据存储到数据库
- 
- */
-- (void)storageAllDataToDB:(NSDictionary *)dic {
-    [[ConfigDB shareDB] updateDataToDB:dic];
-}
-
-/**
  将元数据写入数据库
  元数据：城市ID、配置中心版本号等
  */
