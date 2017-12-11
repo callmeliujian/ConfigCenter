@@ -44,6 +44,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 @property (nonatomic, strong) NSArray *modelKeyNameArray;
 
 @property (nonatomic, strong) NSArray *tableNameArray;
+/**
+ 是否正在进行请求
+ */
+@property (nonatomic, assign) BOOL isRequesting;
 
 @end
 
@@ -62,10 +66,12 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 - (void)setupParams:(NSDictionary *)params {
     self.params = params;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
-    if (self.isGetModelData) {
-        [self getConfigDataFromNetWork1];
-    } else {
-        [self getConfigDataFromNetWork];
+    if (!self.isRequesting) { // 如果当前有正在进行的请求则放弃当前的请求
+        if (self.isGetModelData) {
+            [self getConfigDataFromNetWork1];
+        } else {
+            [self getConfigDataFromNetWork];
+        }
     }
 }
 
@@ -76,6 +82,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     NSLog(@"%@",stringURL);
     NSLog(@"-------------------------------------------------------");
     NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:stringURL]]];
+    self.isRequesting = YES;
     [task resume];
 }
 
@@ -87,7 +94,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     NSLog(@"%@",stringURL);
     NSLog(@"-------------------------------------------------------");
     NSURLSessionDataTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:stringURL]]];
-    
+    self.isRequesting = YES;
     [task resume];
     
 }
@@ -110,11 +117,13 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         CONFIG_ACTION actionInt = [responseDic[@"data"][@"action"] intValue];
         if (![self checkCityID:responseDic[@"data"]]) {
             [task resume];
+            self.isRequesting = NO;
             return;
         }
         if (self.isGetDataFromModel) {
             if (![self checkModelName:responseDic[@"data"]]) {
                 [task resume];
+                self.isRequesting = NO;
                 return;
             }
             self.isGetDataFromModel = NO;
@@ -145,6 +154,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self.delegate failureNetWork:responseDic];
         }
     }
+    self.isRequesting = NO;
 }
 
 /**校验cityid是否正确 */
