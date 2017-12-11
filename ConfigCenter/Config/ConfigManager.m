@@ -126,7 +126,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
                 self.isRequesting = NO;
                 return;
             }
-            self.isGetDataFromModel = NO;
+            //self.isGetDataFromModel = NO;
         }
         if (actionInt == ACTION_NOCHANGE) { // 没有更新
             if ([self.delegate respondsToSelector:@selector(congfigNoChange)])
@@ -138,7 +138,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
                 [self.delegate partKeysChange];
         } else if (actionInt == ACTION_FULL) { //全量更新
             // 删除旧数据库、将数据缓存到新数据库
-            [self deleteOldDB];
+            if (!self.isGetDataFromModel) {
+                [self deleteOldDB];
+            }
+            self.isGetDataFromModel = NO;
             [self storageDataToDB:responseDic[@"data"]];
             if ([self.delegate respondsToSelector:@selector(allKeysChange)])
                 [self.delegate allKeysChange];
