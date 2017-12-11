@@ -50,8 +50,7 @@
     return instance;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.failureMutableDic = [NSMutableDictionary dictionary];
@@ -184,11 +183,6 @@
         [self insertDataToDBWithKey:key withValue:object withTableName:tableName];
     }
 }
-
-
-
-    
-
 
 #pragma mark - 数据库相关操作
 

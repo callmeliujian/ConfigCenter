@@ -70,4 +70,27 @@
     XCTAssertNotNil([self.configDB getAllTbaleName], @"getAllTbaleName通过单元测试");
 }
 
+- (void)testSelectAllDataFromDBWithTableNameWithString {
+    XCTAssertNotNil([self.configDB selectAllDataFromDBWithTableName:@"123"], @"testSelectAllDataFromDBWithTableName通过单元测试");
+    //XCTAssertNil([self.configDB selectAllDataFromDBWithTableName:[NSArray array] init], @"testSelectAllDataFromDBWithTableName通过单元测试");
+}
+
+- (void)testSelectAllDataFromDBWithTableNameWithNullString {
+    XCTAssertNil([self.configDB selectAllDataFromDBWithTableName:@"null"], @"hh");
+}
+
+- (void)testSelectAllDataFromDBWithTableNameWithNull {
+    XCTAssertNil([self.configDB selectAllDataFromDBWithTableName:[NSNull null]], @"testSelectAllDataFromDBWithTableName通过单元测试");
+}
+
+- (void)testSelectAllDataFromDBWithTableNameWithNil {
+    XCTAssertNil([self.configDB selectAllDataFromDBWithTableName:nil], @"testSelectAllDataFromDBWithTableName通过单元测试");
+}
+
+- (void)testSelectAllDataFromDBWithTableNameWithBlank {
+    XCTAssertNil([self.configDB selectAllDataFromDBWithTableName:@""], @"testSelectAllDataFromDBWithTableName通过单元测试");
+}
+
+
+
 @end
