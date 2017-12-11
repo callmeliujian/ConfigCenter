@@ -66,4 +66,8 @@
     XCTAssert([self.configDB closeDB],@"closeDB通过单元测试");
 }
 
+- (void)testGetAllTbaleName {
+    XCTAssertNotNil([self.configDB getAllTbaleName], @"getAllTbaleName通过单元测试");
+}
+
 @end
