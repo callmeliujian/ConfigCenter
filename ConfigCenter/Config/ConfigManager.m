@@ -68,8 +68,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConfigDataFromNetWork) name:UIApplicationWillEnterForegroundNotification object:nil];
     if (!self.isRequesting) { // 如果当前有正在进行的请求则放弃当前的请求
         if (self.isGetModelData) {
+            self.isDBOpen = YES;
             [self getConfigDataFromNetWork1];
         } else {
+            self.isDBOpen = YES;
             [self getConfigDataFromNetWork];
         }
     }
@@ -111,6 +113,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
     self.allData = nil;
     if (error) {
         NSLog(@"配置中心解析数据出错“%@",error);
+        self.isDBOpen = NO;
         return;
     }
     if ([[responseDic valueForKey:@"code"] integerValue] == 0) { //请求成功
@@ -118,12 +121,14 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         if (![self checkCityID:responseDic[@"data"]]) {
             [task resume];
             self.isRequesting = NO;
+            self.isDBOpen = NO;
             return;
         }
         if (self.isGetDataFromModel) {
             if (![self checkModelName:responseDic[@"data"]]) {
                 [task resume];
                 self.isRequesting = NO;
+                self.isDBOpen = NO;
                 return;
             }
             //self.isGetDataFromModel = NO;
@@ -132,12 +137,14 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             if ([self.delegate respondsToSelector:@selector(congfigNoChange)])
                 [self.delegate congfigNoChange];
             self.isGetDataFromModel = NO;
+            self.isDBOpen = NO;
         } else if (actionInt == ACTION_APPEND) { //增量更新
             // 将数据缓存到数据库
             [self storageDataToDB:responseDic[@"data"]];
             if ([self.delegate respondsToSelector:@selector(partKeysChange)])
                 [self.delegate partKeysChange];
             self.isGetDataFromModel = NO;
+            self.isDBOpen = NO;
         } else if (actionInt == ACTION_FULL) { //全量更新
             // 删除旧数据库、将数据缓存到新数据库
             if (!self.isGetDataFromModel) {
@@ -147,6 +154,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             [self storageDataToDB:responseDic[@"data"]];
             if ([self.delegate respondsToSelector:@selector(allKeysChange)])
                 [self.delegate allKeysChange];
+            self.isDBOpen = NO;
         }
     } else { //请求失败, 加载本地数据
         NSLog(@"配置中心网络请求失败:%@",[responseDic valueForKey:@"codeMsg"]);
@@ -158,8 +166,10 @@ typedef NS_ENUM(int, CONFIG_ACTION)
         if ([self.delegate respondsToSelector:@selector(failureNetWork:)]) {
             [self.delegate failureNetWork:responseDic];
         }
+        self.isDBOpen = NO;
     }
     self.isRequesting = NO;
+    self.isDBOpen = NO;
 }
 
 /**校验cityid是否正确 */

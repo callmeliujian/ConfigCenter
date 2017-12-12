@@ -40,6 +40,7 @@
  */
 @property (nonatomic, assign) BOOL isGetModelData;
 
+@property (nonatomic, assign) BOOL isDBOpen;
 
 + (instancetype)shareInstance;
 - (void)setupParams:(NSDictionary *)params;
