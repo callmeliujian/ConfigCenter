@@ -9,6 +9,7 @@
 #import "LJConfigManager.h"
 #import "ConfigManager.h"
 #import "ConfigUtils.h"
+#import "NSString+Utils.h"
 
 @interface LJConfigManager ()
 
@@ -47,7 +48,7 @@
     [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
     [configParam setObject:[self.param objectForKey:@"cityid"] forKey:@"cityid"];
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
-    if ([versionStr isEqualToString:@""]) versionStr = @"-1";
+    if ([NSString isEmptyString:versionStr]) versionStr = @"-1";
     [configParam setObject:versionStr forKey:@"version"];
     [configParam setObject:@"1001" forKey:@"encryptid"];
     [configParam setObject:currentTime forKey:@"time"];

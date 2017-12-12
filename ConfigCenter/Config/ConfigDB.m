@@ -244,19 +244,26 @@
 }
 
 - (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName {
+    // 1.参数校验
     if ([NSString isEmptyString:key] || [NSString isEmptyString:tableName] || ![key isKindOfClass:[NSString class]] || ![tableName isKindOfClass:[NSString class]]) {
         return nil;
     }
-    
-    NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
-    NSString *value = nil;
-    [[ConfigDB shareDB] openDB];
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    while ([result next]) {
-        value = [result stringForColumn:@"value"];
+    // 2.获取数据库中的所有表，并查找传入的tableName是否存在，如果存在则进行查找，不存在返回nil
+    NSArray *tableNameArray = [self getAllTbaleName];
+    for (NSString *tableNameStr in tableNameArray) {
+        if ([tableName isEqualToString:tableNameStr]) {
+            NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
+            NSString *value = nil;
+            [[ConfigDB shareDB] openDB];
+            FMResultSet *result = [self.configDB executeQuery:sql];
+            while ([result next]) {
+                value = [result stringForColumn:@"value"];
+            }
+            [[ConfigDB shareDB] closeDB];
+            return value;
+        }
     }
-    [[ConfigDB shareDB] closeDB];
-    return value;
+    return nil;
 }
 
 - (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName {
