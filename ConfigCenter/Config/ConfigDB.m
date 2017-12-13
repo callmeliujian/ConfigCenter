@@ -9,12 +9,13 @@
 
 #import "ConfigDB.h"
 #import "FMDatabase.h"
+#import "FMDatabaseQueue.h"
 #import "ConfigManager.h"
 #import "NSString+Utils.h"
 
 @interface ConfigDB ()
 
-@property (nonatomic, strong) FMDatabase *configDB;
+@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
 
 /**
  该字典分为3种key-value
@@ -57,14 +58,6 @@
         self.failureModelName = [NSMutableArray array];
     }
     return self;
-}
-
-- (BOOL)openDB {
-    return [self.configDB open];
-}
-
-- (BOOL)closeDB {
-    return [self.configDB close];
 }
 
 - (void)hanldDataToDB:(NSDictionary *)dic {
@@ -195,9 +188,10 @@
 - (BOOL)createTable:(NSString *)tableName {
     if (tableName == nil || [tableName isEqualToString:@""]) return NO;
     NSString *sql = [NSString stringWithFormat:@"create table IF NOT EXISTS %@ (id integer primary key autoincrement, key text, value text);", tableName];
-    [[ConfigDB shareDB] openDB];
-    BOOL success = [self.configDB executeStatements:sql];
-    [[ConfigDB shareDB] closeDB];
+     __block BOOL success;
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        success = [db executeStatements:sql];
+    }];
     return success;
 }
 
@@ -205,19 +199,19 @@
     if (![key isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]] || ![tableName isKindOfClass:[NSString class]]
         || [key isEqualToString:@""] || [value isEqualToString:@""] || [tableName isEqualToString:@""]) return;
     
-    [[ConfigDB shareDB] openDB];
     NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    if ([result next]) {
-        NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",tableName,value,key];
-        BOOL success = [self.configDB executeUpdate:updataSql];
-        if (!success) NSLog(@"配置中心修改数据失败");
-    } else {
-        NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",tableName];
-        BOOL success = [self.configDB executeUpdate:insertSql, key, value];
-        if (!success) NSLog(@"配置中心插入数据失败");
-    }
-    [[ConfigDB shareDB] closeDB];
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        FMResultSet *result = [db executeQuery:sql];
+        if ([result next]) {
+            NSString *updataSql = [NSString stringWithFormat:@"UPDATE %@ SET value='%@' WHERE key = '%@'",tableName,value,key];
+            BOOL success = [db executeUpdate:updataSql];
+            if (!success) NSLog(@"配置中心修改数据失败");
+        } else {
+            NSString *insertSql = [NSString stringWithFormat:@"INSERT INTO %@ (key, value) VALUES (?, ?)",tableName];
+            BOOL success = [db executeUpdate:insertSql, key, value];
+            if (!success) NSLog(@"配置中心插入数据失败");
+        }
+    }];
 }
 
 /**
@@ -235,10 +229,11 @@
     // status = -1 删除
     if ([status intValue] == -1) {
         NSString *sql = [NSString stringWithFormat:@"delete from %@ where key = '%@'", tableName, key];
-        [[ConfigDB shareDB] openDB];
-        BOOL success = [self.configDB executeUpdate:sql];
-        [[ConfigDB shareDB] openDB];
-        if (!success) NSLog(@"配置中心删除数据失败");
+        [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+            BOOL success = [db executeUpdate:sql];
+            if (!success) NSLog(@"配置中心删除数据失败");
+        }];
+        
     }
     return;
 }
@@ -253,13 +248,13 @@
     for (NSString *tableNameStr in tableNameArray) {
         if ([tableName isEqualToString:tableNameStr]) {
             NSString *sql = [NSString stringWithFormat:@"select * from %@ where key = '%@'",tableName,key];
-            NSString *value = nil;
-            [[ConfigDB shareDB] openDB];
-            FMResultSet *result = [self.configDB executeQuery:sql];
-            while ([result next]) {
-                value = [result stringForColumn:@"value"];
-            }
-            [[ConfigDB shareDB] closeDB];
+            __block NSString *value = nil;
+            [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+                FMResultSet *result = [db executeQuery:sql];
+                while ([result next]) {
+                    value = [result stringForColumn:@"value"];
+                }
+            }];
             return value;
         }
     }
@@ -268,91 +263,47 @@
 
 - (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName {
     if ([NSString isEmptyString:tableName] || ![tableName isKindOfClass:[NSString class]]) return nil;
-    [[ConfigDB shareDB] openDB];
-    NSMutableArray *mutableArr = [NSMutableArray array];
+    __block NSMutableArray *mutableArr = [NSMutableArray array];
     NSString *sql = [NSString stringWithFormat:@"select * from %@",tableName];
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    while ([result next]) {
-        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:[result stringForColumn:@"value"], [result stringForColumn:@"key"], nil];
-        [mutableArr addObject:dic];
-    }
-    [[ConfigDB shareDB] closeDB];
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        FMResultSet *result = [db executeQuery:sql];
+        while ([result next]) {
+            NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:[result stringForColumn:@"value"], [result stringForColumn:@"key"], nil];
+            [mutableArr addObject:dic];
+        }
+    }];
     return mutableArr;
 }
 
 - (NSArray *)getAllTbaleName {
-    [[ConfigDB shareDB] openDB];
     NSString *sql = @"SELECT * FROM sqlite_master where type='table';";
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    NSMutableArray *tableNameArray = [NSMutableArray array];
-    while (result.next) {
-        NSString *tableName = [result stringForColumnIndex:1];
-        [tableNameArray addObject:tableName];
-    }
-    [[ConfigDB shareDB] closeDB];
-    return tableNameArray;
-}
-
-
-/**
- 把数据库的数据转化为数组字典
- 
- @param modelNameArray 模块名即表名
- @return 数组字典
- */
-- (NSDictionary *)dataFromDBToDic:(NSArray *)modelNameArray {
-    if (modelNameArray == nil || modelNameArray.count == 0) return nil;
-    NSMutableDictionary *mutableDic = [NSMutableDictionary dictionary];
-    for (NSString *key in modelNameArray) {
-        NSArray *array = [self dataFromDBToArray:key];
-        if (!array) break;
-        [mutableDic setObject:array forKey:key];
-    }
-    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:mutableDic, @"data", nil];
-    return dic;
-}
-
-/**
- 将表里的元素装换为数组
- 
- @param modelName 表名
- @return 表数组
- */
-- (NSArray *)dataFromDBToArray:(NSString *)modelName {
-    if (modelName == nil || [modelName isEqualToString:@""]) return nil;
-    [self.configDB open];
-    NSString *sql = [NSString stringWithFormat:@"select * from %@",modelName];
-    FMResultSet *result = [self.configDB executeQuery:sql];
-    NSMutableArray *mutableArray = [NSMutableArray array];
-    while ([result next]) {
-        NSString *key = [result stringForColumn:@"key"];
-        NSString *value = [result stringForColumn:@"value"];
-        if (key != nil && value != nil && ![key isEqualToString:@""] && ![value isEqualToString:@""] ) {
-            NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:value, key, nil];
-            [mutableArray addObject:dic];
+    __block NSMutableArray *tableNameArray = [NSMutableArray array];
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        FMResultSet *result = [db executeQuery:sql];
+        while (result.next) {
+            NSString *tableName = [result stringForColumnIndex:1];
+            [tableNameArray addObject:tableName];
         }
-    }
-    [self.configDB close];
-    return mutableArray;
+    }];
+    return tableNameArray;
 }
 
 #pragma mark - Lazy
 
-- (FMDatabase *)configDB {
-    if (!_configDB) {
-        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        NSString *dbNamePath = @"test.db";
-        NSString *dbPath = [NSString stringWithFormat:@"%@/%@", path, [dbNamePath lastPathComponent]];
-        NSString *filePath = [[NSBundle mainBundle] resourcePath];
-        NSString *doc_path = [filePath stringByAppendingPathComponent:dbNamePath];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:dbPath]) {
-            [[NSFileManager defaultManager] copyItemAtPath:doc_path toPath:dbPath error:nil];
-        }
-        _configDB = [FMDatabase databaseWithPath:dbPath];
-        
+- (FMDatabaseQueue *)dbQueue {
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject]stringByAppendingPathComponent:@"test"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        _dbQueue = nil;
     }
-    return _configDB;
+    if (!_dbQueue) {
+        NSString *filePath = [[NSBundle mainBundle] resourcePath];
+        NSString *doc_path = [filePath stringByAppendingPathComponent:@"test"];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            [[NSFileManager defaultManager] copyItemAtPath:doc_path toPath:path error:nil];
+        }
+        _dbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
+    }
+    return _dbQueue;
 }
-
 
 @end

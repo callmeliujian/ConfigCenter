@@ -206,10 +206,11 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  删除老版本数据库
  */
 - (void)deleteOldDB {
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *sourcePath = [NSString stringWithFormat:@"%@/test.db", path];
-    if ([[NSFileManager defaultManager]  fileExistsAtPath:sourcePath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:sourcePath error:nil];
+//    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+//    NSString *sourcePath = [NSString stringWithFormat:@"%@/test.db", path];
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject]stringByAppendingPathComponent:@"test"];
+    if ([[NSFileManager defaultManager]  fileExistsAtPath:path]) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         return;
     }
 }

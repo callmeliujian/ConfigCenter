@@ -20,10 +20,6 @@
 
 + (instancetype)shareDB;
 
-- (BOOL)openDB;
-
-- (BOOL)closeDB;
-
 /**
  判断是要增加数据还是要删除数据
  */
