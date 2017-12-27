@@ -245,6 +245,7 @@ typedef NS_ENUM(int, CONFIG_ACTION)
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"网络请求失败" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
             [alert show];
         });
+        self.isRequesting = NO;
         NSLog(@"配置中心网络访问失败：%@",error);
     }
 }

@@ -41,13 +41,12 @@
     NSString *res_sha1 = [ConfigUtils SHA1:res];
     NSMutableDictionary *configParam = [[NSMutableDictionary alloc] init];
     [configParam setObject:self.keyArray forKey:@"modelkeyname"];
-    [configParam setObject:@"10.37.18.173:8030" forKey:@"URL"];
+    [configParam setObject:@"10.37.18.43:8030" forKey:@"URL"];
     [configParam setObject:@"" forKey:@"DB"];
     [configParam setObject:[self.param objectForKey:@"app"]  forKey:@"app"];
     [configParam setObject:[self.param objectForKey:@"platform"] forKey:@"platform"];
     [configParam setObject:[self.param objectForKey:@"appversion"] forKey:@"appversion"];
     [configParam setObject:[self.param objectForKey:@"cityid"] forKey:@"cityid"];
-    if ([ConfigManager shareInstance].isDBOpen) return;
     NSString *versionStr = [[ConfigManager shareInstance] getConfigVersion];
     if ([NSString isEmptyString:versionStr]) versionStr = @"-1";
     [configParam setObject:versionStr forKey:@"version"];
