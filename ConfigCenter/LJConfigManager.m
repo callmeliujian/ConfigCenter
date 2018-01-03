@@ -23,7 +23,6 @@
     dispatch_once(&onceToken, ^{
         if (manager == nil) {
             manager = [[LJConfigManager alloc] init];
-            manager.keyArray = [[NSArray alloc] initWithObjects:@"login", @"pay", @"key3", nil];
         }
     });
     return manager;
@@ -34,13 +33,22 @@
         [[ConfigManager shareInstance] deleteOldDB];
         self.isDeleteBD = NO;
     }
-    
+    NSDictionary *configParamDic = [self configParam];
+    [ConfigManager shareInstance].isGetModelData = self.isGetModelData;
+    [[ConfigManager shareInstance] setupParams:configParamDic];
+}
+
+- (NSArray *)allTableNames {
+    _allTableNames = [[ConfigManager shareInstance] getAllConfigCenterTableName];
+    return _allTableNames;
+}
+
+- (NSDictionary *)configParam {
     long long recordTime = [[NSDate date] timeIntervalSince1970]*1000;
     NSString *currentTime = [NSString stringWithFormat:@"%lld", recordTime];
     NSString *res = [NSString stringWithFormat:@"encryptid=%@secretKey=%@time=%@",@"1001", @"wubashenqi", currentTime];
     NSString *res_sha1 = [ConfigUtils SHA1:res];
     NSMutableDictionary *configParam = [[NSMutableDictionary alloc] init];
-    [configParam setObject:self.keyArray forKey:@"modelkeyname"];
     [configParam setObject:@"10.37.18.43:8030" forKey:@"URL"];
     [configParam setObject:@"" forKey:@"DB"];
     [configParam setObject:[self.param objectForKey:@"app"]  forKey:@"app"];
@@ -54,13 +62,7 @@
     [configParam setObject:currentTime forKey:@"time"];
     [configParam setObject:res_sha1 forKey:@"res"];
     [configParam setObject:[self.param objectForKey:@"modelName"] forKey:@"modelName"];
-    [ConfigManager shareInstance].isGetModelData = self.isGetModelData;
-    [[ConfigManager shareInstance] setupParams:configParam];
-}
-
-- (NSArray *)allTableNames {
-    _allTableNames = [[ConfigManager shareInstance] getAllConfigCenterTableName];
-    return _allTableNames;
+    return configParam;
 }
 
 @end

@@ -11,8 +11,6 @@
 
 @interface LJConfigManager : NSObject <ConfigManagerDelegate>
 
-@property (nonatomic, strong) NSArray *keyArray;
-
 @property (nonatomic, strong) NSDictionary *param;
 /**
  是否删除老数据库

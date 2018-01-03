@@ -63,6 +63,13 @@
 
 - (NSArray *)getAllDataWithTableName:(NSString *)tabelName;
 
+/**
+ 根据tableName和Key查询数据
+
+ @param tableName 表名
+ @param key 字段key
+ @return 字段对应值
+ */
 - (NSString *)getDataFromeTableName:(NSString *)tableName WithKey:(NSString *)key;
 
 @end

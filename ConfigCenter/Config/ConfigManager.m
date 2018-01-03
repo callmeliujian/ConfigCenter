@@ -38,10 +38,6 @@ typedef NS_ENUM(int, CONFIG_ACTION)
  将配置中心解析数据所有需要的model类的名字存在此数组中
  */
 @property (nonatomic, strong) NSMutableArray *classNameArray;
-/**
- model类名对应的key
- */
-@property (nonatomic, strong) NSArray *modelKeyNameArray;
 
 @property (nonatomic, strong) NSArray *tableNameArray;
 /**
