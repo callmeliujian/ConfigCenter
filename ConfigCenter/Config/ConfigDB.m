@@ -118,11 +118,11 @@
         }
     }
     if (self.isExistFailUreModel) {
-        NSString *cityId = [self selectDataFromDB:@"cityId" withTableName:@"config_metadata"];
+        NSString *cityId = [self selectDataFromTableName:@"config_metadata" WithKey:@"cityId"];
         if ([NSString isEmptyString:cityId]) {
             cityId = [[ConfigManager shareInstance].params objectForKey:@"cityid"];
         }
-        NSString *currentVersion = [self selectDataFromDB:@"currentVersion" withTableName:@"config_metadata"];
+        NSString *currentVersion = [self selectDataFromTableName:@"config_metadata" WithKey:@"currentVersion"];
         if ([NSString isEmptyString:currentVersion]) {
             currentVersion = [[ConfigManager shareInstance].params objectForKey:@"version"];
         }
@@ -238,7 +238,7 @@
     return;
 }
 
-- (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName {
+- (NSString *)selectDataFromTableName:(NSString *)tableName WithKey:(NSString *)key {
     // 1.参数校验
     if ([NSString isEmptyString:key] || [NSString isEmptyString:tableName] || ![key isKindOfClass:[NSString class]] || ![tableName isKindOfClass:[NSString class]]) {
         return nil;

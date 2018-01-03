@@ -231,7 +231,11 @@ typedef NS_ENUM(int, CONFIG_ACTION)
 }
 
 - (NSString *)getConfigVersion {
-    return [[ConfigDB shareDB] selectDataFromDB:@"currentVersion" withTableName:@"config_metadata"];
+    return [[ConfigDB shareDB] selectDataFromTableName:@"config_metadata" WithKey:@"currentVersion"];
+}
+
+- (NSString *)getDataFromeTableName:(NSString *)tableName WithKey:(NSString *)key {
+    return [[ConfigDB shareDB] selectDataFromTableName:tableName WithKey:key];
 }
 
 #pragma mark - NSURLSessionDelegate

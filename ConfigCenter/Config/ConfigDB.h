@@ -30,6 +30,6 @@
  获取tableName里所有数据
  */
 - (NSArray *)selectAllDataFromDBWithTableName:(NSString *)tableName;
-- (NSString *)selectDataFromDB:(NSString *)key withTableName:(NSString *)tableName;
+- (NSString *)selectDataFromTableName:(NSString *)tableName WithKey:(NSString *)key;
 
 @end

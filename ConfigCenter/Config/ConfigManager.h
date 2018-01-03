@@ -62,4 +62,7 @@
 - (NSArray *)getAllConfigCenterTableName;
 
 - (NSArray *)getAllDataWithTableName:(NSString *)tabelName;
+
+- (NSString *)getDataFromeTableName:(NSString *)tableName WithKey:(NSString *)key;
+
 @end
